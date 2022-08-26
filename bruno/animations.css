@@ -17,9 +17,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 50vh;
   position: relative;
-  background-color: #1e1f26;
   text-align: center;
   padding: 0 2em;
 }
@@ -44,7 +43,7 @@ h1:hover {
   font-size: 2vw;
   letter-spacing: 0.3rem;
   font-family: "ROBOTO", sans-serif;
-  font-weight: 300;
+  font-weight: 150;
   color: #faebd7;
   z-index: 4;
 }
@@ -52,7 +51,7 @@ h3.span {
   font-size: 2vw;
   letter-spacing: 0.7em;
   font-family: "ROBOTO", sans-serif;
-  font-weight: 300;
+  font-weight: 150;
   color: #faebd7;
   z-index: 4;
 }
@@ -73,17 +72,7 @@ a {
   transition: all 0.5s ease;
 }
 
-
-.background {
-  position: absolute;
-  height: 90vh;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: auto;
-}
-@media (min-width: 800px) {
+@media (min-width: 400px) {
   .nav h1,
   .slider h1 {
     font-size: 5vw;
