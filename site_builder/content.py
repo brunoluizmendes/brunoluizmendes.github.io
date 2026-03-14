@@ -1,26 +1,26 @@
 SITE = {
-    "name": "Bruno Luiz Mendes",
+    "name": "B Tecnologia",
     "site_url": "https://brunoluizmendes.github.io",
-    "headline_en": "Data Engineering and AI Automation built to win trust fast.",
-    "headline_pt": "Engenharia de Dados e AI Automation feitas para gerar confianca rapido.",
+    "headline_en": "Data engineering, analytics, and AI automation for teams that need execution.",
+    "headline_pt": "Engenharia de dados, analytics e AI automation para times que precisam de execucao.",
     "subheadline_en": (
-        "I build production-style data pipelines, analytics platforms, attribution integrations, "
-        "and operational automations with Python, dbt, observability, and clear handoff."
+        "Production-ready pipelines, integrations, and automation systems with observability, "
+        "clean ops, and clear handoff."
     ),
     "subheadline_pt": (
-        "Eu construo pipelines de dados, plataformas de analytics, integracoes de atribuicao "
-        "e automacoes operacionais com Python, dbt, observabilidade e handoff claro."
+        "Pipelines, integracoes e sistemas de automacao prontos para producao, com observabilidade, "
+        "operacao limpa e handoff claro."
     ),
-    "role_en": "Data + AI Automation Freelancer",
-    "role_pt": "Freelancer de Dados + AI Automation",
-    "location_en": "Brazil-based, async-friendly, remote-first.",
-    "location_pt": "Base no Brasil, async-friendly e remoto-first.",
+    "role_en": "Data Engineering + AI Systems",
+    "role_pt": "Data Engineering + Sistemas de AI",
+    "location_en": "Built for finance, ops, marketing, and growth teams.",
+    "location_pt": "Feito para times de financas, operacoes, marketing e growth.",
     "email": "mendesbruno@outlook.com",
     "github_url": "https://github.com/brunoluizmendes",
     "linkedin_url": "https://www.linkedin.com/in/brunoluizmendes/",
     "upwork_url": "https://www.upwork.com/freelancers/~015610c5abb8e28a49?mp_source=share",
     "calendly_url": "",
-    "logo_alt": "Bruno Luiz Mendes brand mark",
+    "logo_alt": "B Tecnologia brand mark",
     "palette": {
         "primary": "#FE017F",
         "secondary": "#1D057D",
@@ -29,19 +29,19 @@ SITE = {
     },
     "stats": [
         {
-            "value": "11",
-            "label_en": "public portfolio builds",
-            "label_pt": "projetos publicos no portfolio",
+            "value": "14",
+            "label_en": "clients served",
+            "label_pt": "clientes atendidos",
         },
         {
-            "value": "4",
-            "label_en": "delivery lanes",
-            "label_pt": "frentes principais de entrega",
+            "value": "13,330+",
+            "label_en": "lines of code shipped",
+            "label_pt": "linhas de codigo entregues",
         },
         {
-            "value": "PY + dbt",
-            "label_en": "default execution stack",
-            "label_pt": "stack principal de execucao",
+            "value": "Ops-ready",
+            "label_en": "logs, monitoring, and safe replay paths",
+            "label_pt": "logs, monitoramento e replay seguro",
         },
     ],
     "proof_ribbon": [
@@ -58,15 +58,13 @@ SITE = {
     "services": [
         {
             "eyebrow": "01",
-            "title_en": "Data platforms that stay usable",
-            "title_pt": "Plataformas de dados que continuam usaveis",
+            "title_en": "Data platforms and lakehouses",
+            "title_pt": "Plataformas de dados e lakehouses",
             "body_en": (
-                "Lakehouse, warehouse, dbt layers, orchestration, and validation logic packaged "
-                "for teams that need reliable day-to-day operations, not architecture theater."
+                "Warehouses, lakehouses, dbt layers, orchestration, and validation designed for stable day-to-day operations."
             ),
             "body_pt": (
-                "Lakehouse, warehouse, camadas dbt, orquestracao e validacoes embaladas para "
-                "times que precisam de operacao confiavel no dia a dia."
+                "Warehouses, lakehouses, camadas dbt, orquestracao e validacoes feitas para operacao confiavel no dia a dia."
             ),
         },
         {
@@ -74,12 +72,10 @@ SITE = {
             "title_en": "Marketing and revenue integrations",
             "title_pt": "Integracoes de marketing e receita",
             "body_en": (
-                "Meta Ads, GA4, AppsFlyer, forms, CRM syncs, and attribution-ready datasets "
-                "with clean schemas, retries, and publish controls."
+                "Meta Ads, GA4, AppsFlyer, forms, CRM syncs, and attribution-ready datasets with clean schemas and delivery controls."
             ),
             "body_pt": (
-                "Meta Ads, GA4, AppsFlyer, formularios, sincronizacao com CRM e datasets prontos "
-                "para atribuicao com schemas limpos e controle operacional."
+                "Meta Ads, GA4, AppsFlyer, formularios, CRM e datasets prontos para atribuicao com schema limpo e controle operacional."
             ),
         },
         {
@@ -87,77 +83,71 @@ SITE = {
             "title_en": "Finance and ops automation",
             "title_pt": "Automacao financeira e operacional",
             "body_en": (
-                "ERP pipelines, reconciliations, scraping-led automations, and operational "
-                "visibility for teams still stuck in manual workflows."
+                "ERP pipelines, reconciliations, scraping automations, and operational visibility for manual workflows."
             ),
             "body_pt": (
-                "Pipelines de ERP, conciliacoes, automacoes com scraping e visibilidade "
-                "operacional para times ainda presos em processos manuais."
+                "Pipelines de ERP, conciliacoes, automacoes com scraping e visibilidade para processos ainda manuais."
             ),
         },
         {
             "eyebrow": "04",
-            "title_en": "AI workflows with engineering discipline",
-            "title_pt": "Fluxos de AI com disciplina de engenharia",
+            "title_en": "AI workflows and signal pipelines",
+            "title_pt": "Fluxos de AI e pipelines de sinais",
             "body_en": (
-                "AI agents, email processing, CRM actions, and trend-detection pipelines built "
-                "with contracts, logs, dead-letter handling, and safe replay."
+                "AI agents, email processing, CRM actions, and trend pipelines built with logs, contracts, and safe replay."
             ),
             "body_pt": (
-                "Agentes de AI, processamento de email, acoes em CRM e pipelines de trend "
-                "detection construidos com contratos, logs, dead-letter e replay seguro."
+                "Agentes de AI, processamento de email, acoes em CRM e pipelines de sinais com logs, contratos e replay seguro."
             ),
         },
     ],
     "process": [
         {
-            "title_en": "Translate business pain into clean scope",
-            "title_pt": "Traduzir dor de negocio em escopo claro",
+            "title_en": "Scope the real problem fast",
+            "title_pt": "Escopo claro para o problema certo",
             "body_en": (
-                "I prioritize the few decisions that change architecture, operating cost, and delivery risk."
+                "The first step is isolating the few decisions that really change architecture, cost, and delivery risk."
             ),
             "body_pt": (
-                "Eu priorizo as poucas decisoes que realmente mudam arquitetura, custo operacional e risco."
+                "O primeiro passo e isolar as poucas decisoes que realmente mudam arquitetura, custo e risco."
             ),
         },
         {
-            "title_en": "Ship with logs, tests, and replay paths",
-            "title_pt": "Entregar com logs, testes e caminhos de replay",
+            "title_en": "Ship with operational control",
+            "title_pt": "Entregar com controle operacional",
             "body_en": (
-                "Pipelines should be easy to debug, re-run, and hand over. That is part of the work, not polish."
+                "Logs, retries, tests, and replay paths are part of the delivery, not an afterthought."
             ),
             "body_pt": (
-                "Pipeline tem que ser facil de debugar, reprocessar e fazer handoff. Isso faz parte da entrega."
+                "Logs, retries, testes e replay fazem parte da entrega, nao entram depois."
             ),
         },
         {
             "title_en": "Keep the stack practical",
-            "title_pt": "Manter a stack pratica",
+            "title_pt": "Stack pratica e objetiva",
             "body_en": (
-                "Python-first, dbt where modeling matters, simple cloud primitives when they are enough."
+                "The stack stays lean: the right cloud pieces, clean modeling, and no unnecessary complexity."
             ),
             "body_pt": (
-                "Python-first, dbt onde modelagem importa e primitives simples de cloud quando bastam."
+                "A stack fica enxuta: cloud na medida certa, modelagem limpa e sem complexidade desnecessaria."
             ),
         },
         {
-            "title_en": "Leave clean documentation behind",
-            "title_pt": "Deixar documentacao limpa no final",
+            "title_en": "Leave the handoff clean",
+            "title_pt": "Handoff limpo no final",
             "body_en": (
-                "Runbooks, validation queries, deployment notes, and a repo structure another engineer can extend."
+                "Runbooks, validation queries, deploy notes, and a repo another engineer can extend without friction."
             ),
             "body_pt": (
-                "Runbooks, queries de validacao, notas de deploy e uma estrutura que outro engenheiro consegue evoluir."
+                "Runbooks, queries de validacao, notas de deploy e uma estrutura que outro engenheiro consegue evoluir sem atrito."
             ),
         },
     ],
     "about_en": (
-        "I work like a senior builder for lean teams: direct scope, strong technical judgment, clean repos, "
-        "and shipping paths that do not collapse after handoff."
+        "B Tecnologia builds lean data and automation systems with practical architecture, strong observability, and clean handoff."
     ),
     "about_pt": (
-        "Eu trabalho como um senior builder para times enxutos: escopo direto, julgamento tecnico forte, "
-        "repos limpos e entregas que nao colapsam depois do handoff."
+        "A B Tecnologia entrega sistemas de dados e automacao com arquitetura pratica, observabilidade forte e handoff limpo."
     ),
 }
 

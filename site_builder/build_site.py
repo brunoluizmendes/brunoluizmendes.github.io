@@ -13,6 +13,14 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
+FEATURED_PROJECT_SLUGS = (
+    "financial-process-automation-scraping",
+    "gcp-lakehouse-dbt-bigquery",
+    "erp-to-bigquery-finance-analytics",
+    "meta-ads-to-bigquery-pipeline",
+    "dagster-dbt-orchestration-pipeline",
+    "ai-automation-engineer-workflows",
+)
 
 
 def write_text(path: Path, content: str) -> None:
@@ -51,6 +59,11 @@ def grouped_projects() -> list[tuple[dict, list[dict]]]:
     return [(lane, [project for project in PROJECTS if project["lane"] == lane["key"]]) for lane in LANES]
 
 
+def featured_projects() -> list[dict]:
+    featured = [project for project in PROJECTS if project["slug"] in FEATURED_PROJECT_SLUGS]
+    return sorted(featured, key=lambda item: FEATURED_PROJECT_SLUGS.index(item["slug"]))
+
+
 def route_prefix(language: str) -> str:
     return "" if language == "en" else "/pt"
 
@@ -62,7 +75,7 @@ def language_href(language: str, route: str) -> str:
 
 
 def page_title(language: str, custom_title: str | None = None) -> str:
-    base = "Bruno Luiz Mendes"
+    base = SITE["name"]
     if custom_title:
         return f"{custom_title} | {base}"
     return f"{base} | {t(language, SITE['role_en'], SITE['role_pt'])}"
@@ -153,18 +166,18 @@ def header_markup(language: str, route: str) -> str:
 
 
 def footer_markup(language: str) -> str:
-    book_label = t(language, "Book intro call", "Agendar conversa")
+    book_label = t(language, "Start a project", "Iniciar projeto")
     book_url = cta_url()
     note = t(
         language,
-        "Calendly will be plugged in here. For now, this button falls back to email.",
-        "O Calendly vai entrar aqui depois. Por enquanto, este botao cai para email.",
+        "Calendly will be added later. For now, email or Upwork is the fastest path.",
+        "O Calendly entra depois. Por enquanto, email ou Upwork e o caminho mais rapido.",
     )
     return f"""<footer class="site-footer" id="contact">
   <div class="footer-grid">
     <div>
-      <p class="eyebrow">{html.escape(t(language, 'Available for', 'Disponivel para'))}</p>
-      <h2>{html.escape(t(language, 'Data Engineering + AI Automation', 'Data Engineering + AI Automation'))}</h2>
+      <p class="eyebrow">{html.escape(SITE['name'])}</p>
+      <h2>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</h2>
       <p class="footer-copy">{html.escape(t(language, SITE['about_en'], SITE['about_pt']))}</p>
     </div>
     <div class="footer-actions">
@@ -180,12 +193,12 @@ def footer_markup(language: str) -> str:
       <a href="{SITE['linkedin_url']}" target="_blank" rel="noreferrer">LinkedIn</a>
       <a href="{SITE['upwork_url']}" target="_blank" rel="noreferrer">Upwork</a>
     </div>
-    <p>© 2026 Bruno Luiz Mendes</p>
+    <p>© 2026 {html.escape(SITE['name'])}</p>
   </div>
 </footer>"""
 
 
-def project_card(language: str, project: dict, detailed: bool = False) -> str:
+def project_card(language: str, project: dict, detailed: bool = False, compact: bool = False) -> str:
     detail_href = f"{route_prefix(language)}/projects/{project['slug']}/"
     repo_href = repo_url(project["repo"])
     title = html.escape(project["title"])
@@ -194,14 +207,18 @@ def project_card(language: str, project: dict, detailed: bool = False) -> str:
     summary = html.escape(t(language, project["summary_en"], project["summary_pt"]))
     stack = "".join(f"<li>{html.escape(item)}</li>" for item in project["stack"][:4])
     class_name = "project-card project-card-detailed" if detailed else "project-card"
+    if compact:
+        class_name += " project-card-compact"
+    tagline_markup = "" if compact else f'<p class="project-tagline">{tagline}</p>'
+    stack_markup = "" if compact else f'<ul class="stack-list">{stack}</ul>'
     return f"""<article class="{class_name}" data-reveal>
   <div class="project-card-top">
     <p class="project-category">{category}</p>
     <h3>{title}</h3>
-    <p class="project-tagline">{tagline}</p>
+    {tagline_markup}
   </div>
   <p class="project-summary">{summary}</p>
-  <ul class="stack-list">{stack}</ul>
+  {stack_markup}
   <div class="project-links">
     <a href="{detail_href}" class="inline-link">{html.escape(t(language, 'View case', 'Ver case'))}</a>
     <a href="{repo_href}" class="inline-link" target="_blank" rel="noreferrer">GitHub</a>
@@ -209,10 +226,70 @@ def project_card(language: str, project: dict, detailed: bool = False) -> str:
 </article>"""
 
 
+def hero_carousel_markup(language: str) -> str:
+    slides = [
+        {
+            "image": "/assets/slide-lakehouse.svg",
+            "alt_en": "Warehouse and dbt architecture visual",
+            "alt_pt": "Visual de arquitetura de warehouse e dbt",
+            "title_en": "Warehouse + dbt delivery",
+            "title_pt": "Entrega de warehouse + dbt",
+            "text_en": "Layered models, cost-aware design, orchestration, and clean handoff.",
+            "text_pt": "Modelagem em camadas, custo controlado, orquestracao e handoff limpo.",
+        },
+        {
+            "image": "/assets/slide-observability.svg",
+            "alt_en": "Monitoring and operational observability visual",
+            "alt_pt": "Visual de monitoramento e observabilidade operacional",
+            "title_en": "Monitoring that operators can use",
+            "title_pt": "Monitoramento que a operacao usa",
+            "text_en": "Run logs, event logs, retries, dead-letter flows, and replay-safe pipelines.",
+            "text_pt": "Run logs, event logs, retries, dead-letter e pipelines seguros para replay.",
+        },
+        {
+            "image": "/assets/slide-revenue-automation.svg",
+            "alt_en": "Marketing and CRM automation visual",
+            "alt_pt": "Visual de automacao de marketing e CRM",
+            "title_en": "Revenue and CRM automation",
+            "title_pt": "Automacao de receita e CRM",
+            "text_en": "Attribution, lead routing, CRM syncs, and AI-assisted workflow automation.",
+            "text_pt": "Atribuicao, roteamento de leads, sync com CRM e automacao com AI.",
+        },
+    ]
+    cards = []
+    dots = []
+    for index, slide in enumerate(slides):
+        active = " is-active" if index == 0 else ""
+        cards.append(
+            f"""<article class="carousel-slide{active}" data-carousel-slide>
+  <img src="{slide['image']}" alt="{html.escape(t(language, slide['alt_en'], slide['alt_pt']))}" class="carousel-image">
+  <div class="carousel-caption">
+    <strong>{html.escape(t(language, slide['title_en'], slide['title_pt']))}</strong>
+    <span>{html.escape(t(language, slide['text_en'], slide['text_pt']))}</span>
+  </div>
+</article>"""
+        )
+        dots.append(
+            f'<button class="carousel-dot{active}" type="button" aria-label="{html.escape(t(language, slide["title_en"], slide["title_pt"]))}" data-carousel-dot="{index}"></button>'
+        )
+    return f"""<div class="brand-stage" data-carousel>
+  <div class="brand-orb orb-primary"></div>
+  <div class="brand-orb orb-secondary"></div>
+  <div class="brand-chip">
+    <img src="/assets/brand-mark.svg" alt="{html.escape(SITE['logo_alt'])}" class="brand-chip-logo">
+    <span>{html.escape(SITE['name'])}</span>
+  </div>
+  <div class="carousel-shell">
+    {''.join(cards)}
+  </div>
+  <div class="carousel-controls">{''.join(dots)}</div>
+</div>"""
+
+
 def hero_markup(language: str) -> str:
     actions = []
-    primary_label = t(language, "Book intro call", "Agendar conversa")
-    secondary_label = t(language, "Hire me on Upwork", "Me contratar no Upwork")
+    primary_label = t(language, "Start a project", "Iniciar projeto")
+    secondary_label = t(language, "Upwork", "Upwork")
     tertiary_label = t(language, "LinkedIn", "LinkedIn")
     actions.append(f'<a href="{cta_url()}" class="button button-primary">{html.escape(primary_label)}</a>')
     actions.append(
@@ -229,10 +306,24 @@ def hero_markup(language: str) -> str:
 </div>"""
         for item in SITE["stats"]
     )
-    callout = t(
-        language,
-        "Calendly button is reserved in the layout. Until the link is live, it falls back to email.",
-        "O botao de Calendly ja esta previsto no layout. Ate o link entrar, ele cai para email.",
+    terminal_lines = (
+        (
+            "$ pipeline stack",
+            "python -- dbt -- warehouses -- automation",
+            "$ controls",
+            "logs -- monitoring -- retries -- dead-letter",
+            "$ buyer value",
+            "clean delivery -- lower ops risk -- faster handoff",
+        )
+        if language == "en"
+        else (
+            "$ pipeline stack",
+            "python -- dbt -- warehouses -- automacao",
+            "$ controles",
+            "logs -- monitoramento -- retries -- dead-letter",
+            "$ valor",
+            "entrega limpa -- menos risco operacional -- handoff rapido",
+        )
     )
     return f"""<section class="hero">
   <div class="hero-copy" data-reveal>
@@ -241,26 +332,21 @@ def hero_markup(language: str) -> str:
     <p class="hero-text">{html.escape(t(language, SITE['subheadline_en'], SITE['subheadline_pt']))}</p>
     <p class="hero-location">{html.escape(t(language, SITE['location_en'], SITE['location_pt']))}</p>
     <div class="hero-actions">{''.join(actions)}</div>
-    <p class="micro-note">{html.escape(callout)}</p>
     <div class="proof-ribbon">{proof}</div>
   </div>
   <div class="hero-visual" data-reveal>
-    <div class="brand-stage">
-      <div class="brand-orb orb-primary"></div>
-      <div class="brand-orb orb-secondary"></div>
-      <div class="brand-panel">
-        <img src="/assets/brand-mark.svg" alt="{html.escape(SITE['logo_alt'])}" class="hero-logo">
-      </div>
-    </div>
+    {hero_carousel_markup(language)}
     <div class="terminal-card">
       <div class="terminal-head">
         <span></span><span></span><span></span>
       </div>
       <code>
-        <span>$ pipeline stack</span>
-        <span>python -- dbt -- observability -- automation</span>
-        <span>$ buyer fit</span>
-        <span>lean teams that need senior execution</span>
+        <span>{html.escape(terminal_lines[0])}</span>
+        <span>{html.escape(terminal_lines[1])}</span>
+        <span>{html.escape(terminal_lines[2])}</span>
+        <span>{html.escape(terminal_lines[3])}</span>
+        <span>{html.escape(terminal_lines[4])}</span>
+        <span>{html.escape(terminal_lines[5])}</span>
       </code>
     </div>
   </div>
@@ -279,33 +365,25 @@ def services_markup(language: str) -> str:
     )
     return f"""<section class="section section-services" id="services">
   <div class="section-heading">
-    <p class="eyebrow">{html.escape(t(language, 'What I build', 'O que eu construo'))}</p>
-    <h2>{html.escape(t(language, 'Freelance delivery focused on systems that keep working', 'Entrega freelancer focada em sistemas que continuam funcionando'))}</h2>
+    <p class="eyebrow">{html.escape(t(language, 'What B Tecnologia builds', 'O que a B Tecnologia entrega'))}</p>
+    <h2>{html.escape(t(language, 'Systems built to stay in production', 'Sistemas feitos para ficar em producao'))}</h2>
   </div>
   <div class="service-grid">{cards}</div>
 </section>"""
 
 
 def project_sections_markup(language: str) -> str:
-    sections = []
-    for lane, projects in grouped_projects():
-        cards = "".join(project_card(language, project) for project in projects)
-        sections.append(
-            f"""<section class="lane-block" data-reveal>
-  <div class="lane-heading">
-    <p class="eyebrow">{html.escape(t(language, lane['title_en'], lane['title_pt']))}</p>
-    <p>{html.escape(t(language, lane['body_en'], lane['body_pt']))}</p>
-  </div>
-  <div class="project-grid">{cards}</div>
-</section>"""
-        )
+    cards = "".join(project_card(language, project, compact=True) for project in featured_projects())
     return f"""<section class="section section-projects" id="projects">
   <div class="section-heading">
-    <p class="eyebrow">{html.escape(t(language, 'Portfolio built for buyer confidence', 'Portfolio feito para gerar confianca no comprador'))}</p>
-    <h2>{html.escape(t(language, '11 public projects that show how I actually ship', '11 projetos publicos que mostram como eu realmente entrego'))}</h2>
-    <p>{html.escape(t(language, 'Every project below links to the GitHub repo and a short case page with context.', 'Cada projeto abaixo aponta para o repositorio no GitHub e para uma pagina curta com contexto.'))}</p>
+    <p class="eyebrow">{html.escape(t(language, 'Selected work', 'Cases selecionados'))}</p>
+    <h2>{html.escape(t(language, 'Selected Projects', 'Projetos selecionados'))}</h2>
+    <p>{html.escape(t(language, 'A compact sample of systems built for data platforms, finance ops, marketing integrations, and automation workflows.', 'Uma selecao compacta de sistemas entregues para plataforma de dados, operacao financeira, integracoes de marketing e automacao.'))}</p>
   </div>
-  {''.join(sections)}
+  <div class="project-grid">{cards}</div>
+  <div class="section-actions">
+    <a href="{route_prefix(language)}/projects/" class="button button-secondary">{html.escape(t(language, 'View all projects', 'Ver todos os projetos'))}</a>
+  </div>
 </section>"""
 
 
@@ -319,8 +397,8 @@ def process_markup(language: str) -> str:
     )
     return f"""<section class="section section-process" id="process">
   <div class="section-heading">
-    <p class="eyebrow">{html.escape(t(language, 'How I work', 'Como eu trabalho'))}</p>
-    <h2>{html.escape(t(language, 'Senior-style execution without platform-team ceremony', 'Execucao de senior sem cerimonia de time de plataforma'))}</h2>
+    <p class="eyebrow">{html.escape(t(language, 'How we work', 'Como trabalhamos'))}</p>
+    <h2>{html.escape(t(language, 'Senior execution, clean delivery', 'Execucao senior, entrega limpa'))}</h2>
     <p>{html.escape(t(language, SITE['about_en'], SITE['about_pt']))}</p>
   </div>
   <div class="process-grid">{cards}</div>
@@ -328,20 +406,7 @@ def process_markup(language: str) -> str:
 
 
 def home_markup(language: str) -> str:
-    intro_title = t(language, "Data systems that sell reliability", "Sistemas de dados que vendem confiabilidade")
-    intro_body = t(
-        language,
-        "This landing is designed for Upwork buyers who need technical confidence quickly: clear offer, real code, and visible proof of execution.",
-        "Esta landing foi feita para compradores do Upwork que precisam de confianca tecnica rapido: oferta clara, codigo real e prova visivel de execucao.",
-    )
     return f"""<main>
-  <section class="intro-strip" data-reveal>
-    <p class="eyebrow">Bruno Luiz Mendes</p>
-    <div>
-      <h2>{html.escape(intro_title)}</h2>
-      <p>{html.escape(intro_body)}</p>
-    </div>
-  </section>
   {hero_markup(language)}
   {services_markup(language)}
   {project_sections_markup(language)}
@@ -406,9 +471,9 @@ def projects_index_markup(language: str) -> str:
     cards = "".join(project_card(language, project, detailed=True) for project in PROJECTS)
     return f"""<main class="projects-index">
   <section class="section-heading section-heading-page" data-reveal>
-    <p class="eyebrow">{html.escape(t(language, 'Project archive', 'Arquivo de projetos'))}</p>
-    <h1>{html.escape(t(language, 'All public portfolio repositories', 'Todos os repositorios publicos do portfolio'))}</h1>
-    <p>{html.escape(t(language, 'Every card links to the GitHub repo and a short case page that explains buyer fit and delivery shape.', 'Cada card aponta para o GitHub e para uma pagina curta que explica encaixe comercial e formato de entrega.'))}</p>
+    <p class="eyebrow">{html.escape(t(language, 'Project portfolio', 'Portfolio de projetos'))}</p>
+    <h1>{html.escape(t(language, 'Systems, integrations, and automation builds', 'Sistemas, integracoes e automacoes entregues'))}</h1>
+    <p>{html.escape(t(language, 'Each project links to the GitHub repository and a short case page with delivery context.', 'Cada projeto aponta para o repositorio no GitHub e para uma pagina curta com contexto de entrega.'))}</p>
   </section>
   <section class="project-grid project-grid-wide">{cards}</section>
 </main>"""
@@ -435,7 +500,7 @@ def page_shell(language: str, route: str, body: str, title: str | None = None, d
 
 def svg_logo() -> str:
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">Bruno Luiz Mendes brand mark</title>
+  <title id="title">B Tecnologia brand mark</title>
   <desc id="desc">A stylized magenta B with an indigo dot.</desc>
   <rect width="512" height="512" rx="128" fill="none"/>
   <circle cx="150" cy="365" r="40" fill="{SITE['palette']['secondary']}"/>
@@ -459,9 +524,102 @@ def svg_og_card() -> str:
   <rect width="1200" height="630" fill="url(#glow)"/>
   <circle cx="222" cy="434" r="42" fill="{SITE['palette']['secondary']}"/>
   <text x="240" y="390" font-size="330" font-weight="700" font-family="Space Grotesk, Arial, sans-serif" fill="{SITE['palette']['primary']}">B</text>
-  <text x="520" y="220" font-size="34" fill="#f4efff" font-family="IBM Plex Mono, monospace">Data + AI Automation Freelancer</text>
-  <text x="520" y="320" font-size="72" font-weight="700" fill="#ffffff" font-family="Space Grotesk, Arial, sans-serif">Bruno Luiz Mendes</text>
-  <text x="520" y="390" font-size="34" fill="#ded8f4" font-family="IBM Plex Sans, sans-serif">Production-style pipelines, integrations, observability, and automation.</text>
+  <text x="520" y="220" font-size="34" fill="#f4efff" font-family="IBM Plex Mono, monospace">Data Engineering + AI Systems</text>
+  <text x="520" y="320" font-size="72" font-weight="700" fill="#ffffff" font-family="Space Grotesk, Arial, sans-serif">B Tecnologia</text>
+  <text x="520" y="390" font-size="34" fill="#ded8f4" font-family="IBM Plex Sans, sans-serif">Production-ready pipelines, integrations, and automation systems.</text>
+</svg>"""
+
+
+def svg_slide_lakehouse() -> str:
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#130c33"/>
+      <stop offset="100%" stop-color="#23105a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" rx="40" fill="url(#bg)"/>
+  <rect x="70" y="72" width="1060" height="96" rx="24" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.10)"/>
+  <rect x="96" y="104" width="210" height="20" rx="10" fill="#FE017F"/>
+  <rect x="96" y="138" width="330" height="12" rx="6" fill="rgba(255,255,255,0.22)"/>
+  <rect x="70" y="220" width="320" height="430" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)"/>
+  <rect x="438" y="220" width="320" height="430" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)"/>
+  <rect x="806" y="220" width="324" height="430" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)"/>
+  <text x="108" y="274" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">raw</text>
+  <text x="476" y="274" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">stage</text>
+  <text x="844" y="274" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">analytics</text>
+  <rect x="108" y="312" width="244" height="52" rx="16" fill="#1D057D"/>
+  <rect x="108" y="388" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="108" y="464" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="476" y="312" width="244" height="52" rx="16" fill="#FE017F"/>
+  <rect x="476" y="388" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="476" y="464" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="844" y="312" width="248" height="168" rx="20" fill="rgba(255,255,255,0.08)"/>
+  <rect x="844" y="508" width="248" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="390" cy="338" r="12" fill="#FE017F"/>
+  <circle cx="760" cy="338" r="12" fill="#FE017F"/>
+  <path d="M364 338h52" stroke="#FE017F" stroke-width="6" stroke-linecap="round"/>
+  <path d="M734 338h52" stroke="#FE017F" stroke-width="6" stroke-linecap="round"/>
+</svg>"""
+
+
+def svg_slide_observability() -> str:
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#100827"/>
+      <stop offset="100%" stop-color="#1D057D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" rx="40" fill="url(#bg2)"/>
+  <rect x="80" y="76" width="460" height="260" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+  <rect x="80" y="378" width="460" height="302" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+  <rect x="582" y="76" width="538" height="604" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+  <text x="118" y="134" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">pipeline_runs</text>
+  <text x="118" y="436" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">pipeline_events</text>
+  <text x="620" y="134" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">sla + alerting</text>
+  <rect x="118" y="168" width="386" height="24" rx="12" fill="rgba(255,255,255,0.10)"/>
+  <rect x="118" y="214" width="300" height="24" rx="12" fill="#73F3A1"/>
+  <rect x="118" y="260" width="210" height="24" rx="12" fill="#FFD166"/>
+  <rect x="118" y="506" width="386" height="20" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="118" y="548" width="386" height="20" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="118" y="590" width="240" height="20" rx="10" fill="#FE017F"/>
+  <path d="M620 532c40-90 98-108 148-158 56-56 88-114 150-214" stroke="#FE017F" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <circle cx="620" cy="532" r="16" fill="#FE017F"/>
+  <circle cx="768" cy="374" r="16" fill="#FE017F"/>
+  <circle cx="918" cy="246" r="16" fill="#FE017F"/>
+  <circle cx="1068" cy="160" r="16" fill="#73F3A1"/>
+  <rect x="620" y="566" width="438" height="54" rx="18" fill="rgba(255,255,255,0.08)"/>
+</svg>"""
+
+
+def svg_slide_revenue_automation() -> str:
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#120b33"/>
+      <stop offset="100%" stop-color="#20094f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" rx="40" fill="url(#bg3)"/>
+  <rect x="88" y="94" width="240" height="150" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
+  <rect x="480" y="94" width="240" height="150" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
+  <rect x="872" y="94" width="240" height="150" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
+  <text x="132" y="160" fill="#FFFFFF" font-size="30" font-family="IBM Plex Sans, Arial, sans-serif">ads</text>
+  <text x="528" y="160" fill="#FFFFFF" font-size="30" font-family="IBM Plex Sans, Arial, sans-serif">forms</text>
+  <text x="914" y="160" fill="#FFFFFF" font-size="30" font-family="IBM Plex Sans, Arial, sans-serif">crm</text>
+  <path d="M328 170h116" stroke="#FE017F" stroke-width="8" stroke-linecap="round"/>
+  <path d="M720 170h116" stroke="#FE017F" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="452" cy="170" r="15" fill="#FE017F"/>
+  <circle cx="844" cy="170" r="15" fill="#FE017F"/>
+  <rect x="88" y="320" width="1024" height="352" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
+  <text x="132" y="382" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">routing + enrichment + sync</text>
+  <rect x="132" y="426" width="168" height="110" rx="20" fill="#1D057D"/>
+  <rect x="332" y="426" width="168" height="110" rx="20" fill="#FE017F"/>
+  <rect x="532" y="426" width="168" height="110" rx="20" fill="rgba(255,255,255,0.10)"/>
+  <rect x="732" y="426" width="168" height="110" rx="20" fill="rgba(255,255,255,0.10)"/>
+  <rect x="932" y="426" width="136" height="110" rx="20" fill="#73F3A1"/>
+  <rect x="132" y="574" width="936" height="26" rx="13" fill="rgba(255,255,255,0.08)"/>
 </svg>"""
 
 
@@ -659,7 +817,6 @@ main,
   background: var(--text);
 }
 
-.intro-strip,
 .hero,
 .section,
 .section-heading-page,
@@ -669,22 +826,8 @@ main,
   z-index: 1;
 }
 
-.intro-strip {
-  margin-top: 2rem;
-  padding: 1rem 1.5rem;
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.intro-strip p {
-  margin: 0;
-  color: var(--text-soft);
-}
-
 .hero {
-  padding: 2rem 0 1rem;
+  padding: 3rem 0 1rem;
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 2rem;
@@ -819,9 +962,9 @@ h3 {
 
 .brand-stage {
   position: relative;
-  min-height: 26rem;
+  min-height: 32rem;
   border-radius: var(--radius);
-  padding: 2rem;
+  padding: 1.25rem;
   background:
     radial-gradient(circle at 28% 25%, rgba(254, 1, 127, 0.22), transparent 46%),
     radial-gradient(circle at 72% 76%, rgba(29, 5, 125, 0.35), transparent 40%),
@@ -853,19 +996,104 @@ h3 {
   background: rgba(29, 5, 125, 0.82);
 }
 
-.brand-panel {
+.brand-chip {
   position: absolute;
-  inset: 3rem;
-  display: grid;
-  place-items: center;
-  border-radius: calc(var(--radius) - 8px);
-  background: linear-gradient(135deg, rgba(231, 231, 231, 0.14), rgba(231, 231, 231, 0.04));
-  border: 1px solid rgba(231, 231, 231, 0.16);
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(9, 5, 29, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
 }
 
-.hero-logo {
-  width: min(20rem, 72%);
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.28));
+.brand-chip-logo {
+  width: 2rem;
+  height: 2rem;
+}
+
+.brand-chip span {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.95rem;
+}
+
+.carousel-shell {
+  position: absolute;
+  inset: 1.2rem;
+  border-radius: calc(var(--radius) - 10px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(7, 4, 24, 0.48);
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.carousel-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-caption {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border-radius: 22px;
+  background: rgba(9, 5, 29, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.carousel-caption strong {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.08rem;
+}
+
+.carousel-caption span {
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+.carousel-controls {
+  position: absolute;
+  right: 1.4rem;
+  top: 1.6rem;
+  z-index: 2;
+  display: inline-flex;
+  gap: 0.55rem;
+}
+
+.carousel-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.24);
+  cursor: pointer;
+}
+
+.carousel-dot.is-active {
+  background: var(--primary);
 }
 
 .terminal-card,
@@ -948,6 +1176,12 @@ h3 {
   margin-bottom: 2rem;
 }
 
+.section-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.4rem;
+}
+
 .service-grid,
 .process-grid {
   display: grid;
@@ -1004,6 +1238,14 @@ h3 {
 
 .project-card-detailed {
   background: var(--card-strong);
+}
+
+.project-card-compact .project-card-top {
+  margin-bottom: 0.7rem;
+}
+
+.project-card-compact .project-summary {
+  margin-bottom: 0;
 }
 
 .project-card-top {
@@ -1138,7 +1380,6 @@ h3 {
   .detail-hero,
   .footer-grid,
   .detail-grid,
-  .intro-strip,
   .service-grid,
   .process-grid,
   .project-grid,
@@ -1175,6 +1416,16 @@ h3 {
 
   .site-header[data-open="true"] .site-nav {
     display: flex;
+  }
+
+  .brand-stage {
+    min-height: 26rem;
+  }
+
+  .carousel-caption {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
   }
 }
 
@@ -1246,6 +1497,42 @@ if ("IntersectionObserver" in window) {
 } else {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
+
+const carousel = document.querySelector("[data-carousel]");
+
+if (carousel) {
+  const slides = Array.from(carousel.querySelectorAll("[data-carousel-slide]"));
+  const dots = Array.from(carousel.querySelectorAll("[data-carousel-dot]"));
+  let activeIndex = 0;
+  let timer;
+
+  const setActive = (index) => {
+    activeIndex = index;
+    slides.forEach((slide, slideIndex) => {
+      slide.classList.toggle("is-active", slideIndex === index);
+    });
+    dots.forEach((dot, dotIndex) => {
+      dot.classList.toggle("is-active", dotIndex === index);
+    });
+  };
+
+  const restart = () => {
+    window.clearInterval(timer);
+    timer = window.setInterval(() => {
+      setActive((activeIndex + 1) % slides.length);
+    }, 4200);
+  };
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      setActive(index);
+      restart();
+    });
+  });
+
+  setActive(0);
+  restart();
+}
 """.strip()
 
 
@@ -1265,11 +1552,11 @@ def render_projects_index(language: str) -> str:
         language,
         route,
         projects_index_markup(language),
-        t(language, "Project Archive", "Arquivo de Projetos"),
+        t(language, "Project Portfolio", "Portfolio de Projetos"),
         t(
             language,
-            "All public data engineering and automation portfolio repositories by Bruno Luiz Mendes.",
-            "Todos os repositorios publicos de engenharia de dados e automacao de Bruno Luiz Mendes.",
+            "Portfolio of data engineering, analytics, and automation systems by B Tecnologia.",
+            "Portfolio de sistemas de engenharia de dados, analytics e automacao da B Tecnologia.",
         ),
     )
 
@@ -1288,7 +1575,7 @@ def render_404() -> str:
     </div>
     <div class="detail-panel">
       <div class="detail-chip">Next step</div>
-      <p>If you arrived here from a message or proposal, the homepage and project archive contain the current public portfolio links.</p>
+      <p>If you arrived here from a message or proposal, the homepage and project archive contain the current B Tecnologia portfolio links.</p>
     </div>
   </section>
 </main>"""
@@ -1318,8 +1605,8 @@ def robots_txt() -> str:
 
 def webmanifest() -> str:
     return """{
-  "name": "Bruno Luiz Mendes",
-  "short_name": "Bruno",
+  "name": "B Tecnologia",
+  "short_name": "BTech",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#09051d",
@@ -1356,6 +1643,9 @@ def build_pages() -> None:
     write_text(DIST / "assets" / "brand-mark.svg", svg_logo())
     write_text(DIST / "assets" / "favicon.svg", svg_logo())
     write_text(DIST / "assets" / "og-card.svg", svg_og_card())
+    write_text(DIST / "assets" / "slide-lakehouse.svg", svg_slide_lakehouse())
+    write_text(DIST / "assets" / "slide-observability.svg", svg_slide_observability())
+    write_text(DIST / "assets" / "slide-revenue-automation.svg", svg_slide_revenue_automation())
 
 
 if __name__ == "__main__":

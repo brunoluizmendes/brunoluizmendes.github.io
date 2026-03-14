@@ -1,6 +1,6 @@
-# Bruno Luiz Mendes GitHub Pages
+# B Tecnologia GitHub Pages
 
-Static GitHub Pages source for the public freelancer landing at `https://brunoluizmendes.github.io/`.
+Static GitHub Pages source for the public B Tecnologia landing at `https://brunoluizmendes.github.io/`.
 
 ## Local build
 
