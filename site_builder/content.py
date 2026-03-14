@@ -1,8 +1,8 @@
 SITE = {
     "name": "B Tecnologia",
     "site_url": "https://brunoluizmendes.github.io",
-    "headline_en": "Data engineering, analytics, and AI automation for teams that need execution.",
-    "headline_pt": "Engenharia de dados, analytics e AI automation para times que precisam de execucao.",
+    "headline_en": "Data engineering and AI automation that ship.",
+    "headline_pt": "Engenharia de dados e AI automation que entregam.",
     "subheadline_en": (
         "Production-ready pipelines, integrations, and automation systems with observability, "
         "clean ops, and clear handoff."
@@ -33,7 +33,7 @@ SITE = {
             "label_pt": "clientes atendidos",
         },
         {
-            "value": "13,330+",
+            "value": "130k+",
             "label_en": "lines of pipelines, SQL, IaC, and automation assets",
             "label_pt": "linhas de pipelines, SQL, IaC e automacao",
         },
@@ -41,11 +41,6 @@ SITE = {
             "value": "GCP + AWS",
             "label_en": "delivery across cloud, warehouse, and activation stacks",
             "label_pt": "entrega em cloud, warehouse e stacks de ativacao",
-        },
-        {
-            "value": "Ops-grade",
-            "label_en": "logs, monitoring, retries, dead-letter, and replay paths",
-            "label_pt": "logs, monitoramento, retries, dead-letter e replay",
         },
     ],
     "proof_ribbon": [
