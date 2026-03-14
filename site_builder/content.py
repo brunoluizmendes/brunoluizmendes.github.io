@@ -1,0 +1,537 @@
+SITE = {
+    "name": "Bruno Luiz Mendes",
+    "site_url": "https://brunoluizmendes.github.io",
+    "headline_en": "Data Engineering and AI Automation built to win trust fast.",
+    "headline_pt": "Engenharia de Dados e AI Automation feitas para gerar confianca rapido.",
+    "subheadline_en": (
+        "I build production-style data pipelines, analytics platforms, attribution integrations, "
+        "and operational automations with Python, dbt, observability, and clear handoff."
+    ),
+    "subheadline_pt": (
+        "Eu construo pipelines de dados, plataformas de analytics, integracoes de atribuicao "
+        "e automacoes operacionais com Python, dbt, observabilidade e handoff claro."
+    ),
+    "role_en": "Data + AI Automation Freelancer",
+    "role_pt": "Freelancer de Dados + AI Automation",
+    "location_en": "Brazil-based, async-friendly, remote-first.",
+    "location_pt": "Base no Brasil, async-friendly e remoto-first.",
+    "email": "mendesbruno@outlook.com",
+    "github_url": "https://github.com/brunoluizmendes",
+    "linkedin_url": "https://www.linkedin.com/in/brunoluizmendes/",
+    "upwork_url": "https://www.upwork.com/freelancers/~015610c5abb8e28a49?mp_source=share",
+    "calendly_url": "",
+    "logo_alt": "Bruno Luiz Mendes brand mark",
+    "palette": {
+        "primary": "#FE017F",
+        "secondary": "#1D057D",
+        "background": "#E7E7E7",
+        "neutral": "#C3C2C3",
+    },
+    "stats": [
+        {
+            "value": "11",
+            "label_en": "public portfolio builds",
+            "label_pt": "projetos publicos no portfolio",
+        },
+        {
+            "value": "4",
+            "label_en": "delivery lanes",
+            "label_pt": "frentes principais de entrega",
+        },
+        {
+            "value": "PY + dbt",
+            "label_en": "default execution stack",
+            "label_pt": "stack principal de execucao",
+        },
+    ],
+    "proof_ribbon": [
+        "Python",
+        "dbt",
+        "BigQuery",
+        "AWS",
+        "Dagster",
+        "Observability",
+        "Marketing Attribution",
+        "CRM Automation",
+        "GitHub Actions",
+    ],
+    "services": [
+        {
+            "eyebrow": "01",
+            "title_en": "Data platforms that stay usable",
+            "title_pt": "Plataformas de dados que continuam usaveis",
+            "body_en": (
+                "Lakehouse, warehouse, dbt layers, orchestration, and validation logic packaged "
+                "for teams that need reliable day-to-day operations, not architecture theater."
+            ),
+            "body_pt": (
+                "Lakehouse, warehouse, camadas dbt, orquestracao e validacoes embaladas para "
+                "times que precisam de operacao confiavel no dia a dia."
+            ),
+        },
+        {
+            "eyebrow": "02",
+            "title_en": "Marketing and revenue integrations",
+            "title_pt": "Integracoes de marketing e receita",
+            "body_en": (
+                "Meta Ads, GA4, AppsFlyer, forms, CRM syncs, and attribution-ready datasets "
+                "with clean schemas, retries, and publish controls."
+            ),
+            "body_pt": (
+                "Meta Ads, GA4, AppsFlyer, formularios, sincronizacao com CRM e datasets prontos "
+                "para atribuicao com schemas limpos e controle operacional."
+            ),
+        },
+        {
+            "eyebrow": "03",
+            "title_en": "Finance and ops automation",
+            "title_pt": "Automacao financeira e operacional",
+            "body_en": (
+                "ERP pipelines, reconciliations, scraping-led automations, and operational "
+                "visibility for teams still stuck in manual workflows."
+            ),
+            "body_pt": (
+                "Pipelines de ERP, conciliacoes, automacoes com scraping e visibilidade "
+                "operacional para times ainda presos em processos manuais."
+            ),
+        },
+        {
+            "eyebrow": "04",
+            "title_en": "AI workflows with engineering discipline",
+            "title_pt": "Fluxos de AI com disciplina de engenharia",
+            "body_en": (
+                "AI agents, email processing, CRM actions, and trend-detection pipelines built "
+                "with contracts, logs, dead-letter handling, and safe replay."
+            ),
+            "body_pt": (
+                "Agentes de AI, processamento de email, acoes em CRM e pipelines de trend "
+                "detection construidos com contratos, logs, dead-letter e replay seguro."
+            ),
+        },
+    ],
+    "process": [
+        {
+            "title_en": "Translate business pain into clean scope",
+            "title_pt": "Traduzir dor de negocio em escopo claro",
+            "body_en": (
+                "I prioritize the few decisions that change architecture, operating cost, and delivery risk."
+            ),
+            "body_pt": (
+                "Eu priorizo as poucas decisoes que realmente mudam arquitetura, custo operacional e risco."
+            ),
+        },
+        {
+            "title_en": "Ship with logs, tests, and replay paths",
+            "title_pt": "Entregar com logs, testes e caminhos de replay",
+            "body_en": (
+                "Pipelines should be easy to debug, re-run, and hand over. That is part of the work, not polish."
+            ),
+            "body_pt": (
+                "Pipeline tem que ser facil de debugar, reprocessar e fazer handoff. Isso faz parte da entrega."
+            ),
+        },
+        {
+            "title_en": "Keep the stack practical",
+            "title_pt": "Manter a stack pratica",
+            "body_en": (
+                "Python-first, dbt where modeling matters, simple cloud primitives when they are enough."
+            ),
+            "body_pt": (
+                "Python-first, dbt onde modelagem importa e primitives simples de cloud quando bastam."
+            ),
+        },
+        {
+            "title_en": "Leave clean documentation behind",
+            "title_pt": "Deixar documentacao limpa no final",
+            "body_en": (
+                "Runbooks, validation queries, deployment notes, and a repo structure another engineer can extend."
+            ),
+            "body_pt": (
+                "Runbooks, queries de validacao, notas de deploy e uma estrutura que outro engenheiro consegue evoluir."
+            ),
+        },
+    ],
+    "about_en": (
+        "I work like a senior builder for lean teams: direct scope, strong technical judgment, clean repos, "
+        "and shipping paths that do not collapse after handoff."
+    ),
+    "about_pt": (
+        "Eu trabalho como um senior builder para times enxutos: escopo direto, julgamento tecnico forte, "
+        "repos limpos e entregas que nao colapsam depois do handoff."
+    ),
+}
+
+LANES = [
+    {
+        "key": "platform",
+        "title_en": "Platform, Warehouse, and Orchestration",
+        "title_pt": "Plataforma, Warehouse e Orquestracao",
+        "body_en": "Core analytics foundations, performance, and orchestration-first delivery.",
+        "body_pt": "Fundacao de analytics, performance e entrega orientada a orquestracao.",
+    },
+    {
+        "key": "finance",
+        "title_en": "Finance and Operations Automation",
+        "title_pt": "Automacao de Financas e Operacoes",
+        "body_en": "Pipelines and automations for ERP, finance workflows, and process control.",
+        "body_pt": "Pipelines e automacoes para ERP, fluxos financeiros e controle operacional.",
+    },
+    {
+        "key": "marketing",
+        "title_en": "Marketing, Attribution, and Growth Data",
+        "title_pt": "Marketing, Atribuicao e Dados de Growth",
+        "body_en": "Attribution-ready pipelines for ads, analytics, mobile, and conversion reporting.",
+        "body_pt": "Pipelines prontos para atribuicao em ads, analytics, mobile e conversao.",
+    },
+    {
+        "key": "automation",
+        "title_en": "Signals and AI Automation",
+        "title_pt": "Sinais e AI Automation",
+        "body_en": "Trend detection and agent-driven operations with engineering-grade controls.",
+        "body_pt": "Trend detection e operacoes com agentes, com controles de engenharia.",
+    },
+]
+
+PROJECTS = [
+    {
+        "slug": "financial-process-automation-scraping",
+        "repo": "financial-process-automation-scraping",
+        "lane": "finance",
+        "title": "Financial Process Automation via Web Scraping",
+        "category_en": "Finance automation",
+        "category_pt": "Automacao financeira",
+        "tagline_en": "Authenticated financial portal automation with reconciliation and audit-friendly delivery.",
+        "tagline_pt": "Automacao de portais financeiros autenticados com conciliacao e entrega auditavel.",
+        "summary_en": "Python-led scraping flow with validated schemas, event logs, outbox delivery, and BigQuery-ready outputs.",
+        "summary_pt": "Fluxo de scraping em Python com schemas validados, event logs, outbox e saidas prontas para BigQuery.",
+        "problem_en": "Finance teams still copy invoices, statements, payment status, and tax records from browser-only portals.",
+        "problem_pt": "Times financeiros ainda copiam notas, extratos, status de pagamento e impostos de portais web.",
+        "solution_en": "A robust scraping automation layer with reconciliation checks, fallback logic, retries, and clear ops runbooks.",
+        "solution_pt": "Uma camada robusta de scraping com conciliacao, fallback, retries e runbooks operacionais claros.",
+        "outcome_en": "Cuts repetitive finance ops and keeps downstream accounting or BI flows auditable and replay-safe.",
+        "outcome_pt": "Reduz operacao manual e mantem fluxos de accounting ou BI auditaveis e seguros para replay.",
+        "stack": ["Python", "Browser automation", "dbt", "BigQuery", "Queue/outbox", "Structured logs"],
+        "deliverables_en": [
+            "Authenticated scraping flow",
+            "Reconciliation checks before publish",
+            "Ops dataset logs and dead-letter handling",
+            "Warehouse-ready finance models",
+        ],
+        "deliverables_pt": [
+            "Fluxo de scraping autenticado",
+            "Conciliacao antes do publish",
+            "Logs operacionais e dead-letter",
+            "Modelos financeiros prontos para warehouse",
+        ],
+    },
+    {
+        "slug": "erp-to-bigquery-finance-analytics",
+        "repo": "erp-to-bigquery-finance-analytics",
+        "lane": "finance",
+        "title": "General ERP Data Pipeline",
+        "category_en": "ERP integration",
+        "category_pt": "Integracao ERP",
+        "tagline_en": "Multi-ERP canonical modeling for finance and operations analytics.",
+        "tagline_pt": "Modelagem canonica multi-ERP para analytics de financas e operacoes.",
+        "summary_en": "Unified ERP entities into a BigQuery-ready model with reconciliation, replay-safe incremental loading, and ops telemetry.",
+        "summary_pt": "Unificacao de entidades ERP em um modelo pronto para BigQuery com conciliacao e cargas incrementais seguras.",
+        "problem_en": "Growing teams often run finance reporting across inconsistent ERP exports and broken joins.",
+        "problem_pt": "Times em crescimento frequentemente fazem reporting financeiro sobre exports inconsistentes de ERP.",
+        "solution_en": "Canonical dbt layers, validation queries, and operational logging for customers, invoices, orders, and payments.",
+        "solution_pt": "Camadas canonicas em dbt, queries de validacao e logging operacional para clientes, notas, pedidos e pagamentos.",
+        "outcome_en": "Creates a trustworthy finance analytics foundation without forcing a full replatform first.",
+        "outcome_pt": "Cria uma base confiavel para analytics financeiro sem exigir replatforming completo logo de inicio.",
+        "stack": ["Python", "dbt", "BigQuery", "Canonical modeling", "Ops layer", "Terraform"],
+        "deliverables_en": [
+            "Canonical ERP staging and marts",
+            "Reconciliation logic for balances and payments",
+            "Backfill-safe incremental loading",
+            "Operational runbooks and dashboards",
+        ],
+        "deliverables_pt": [
+            "Camadas canonicas de ERP",
+            "Logica de conciliacao para saldo e pagamentos",
+            "Carga incremental segura para backfill",
+            "Runbooks e visibilidade operacional",
+        ],
+    },
+    {
+        "slug": "gcp-lakehouse-dbt-bigquery",
+        "repo": "gcp-lakehouse-dbt-bigquery",
+        "lane": "platform",
+        "title": "GCP Lakehouse Implementation",
+        "category_en": "Lakehouse on GCP",
+        "category_pt": "Lakehouse na GCP",
+        "tagline_en": "Low-maintenance GCS + BigQuery lakehouse with dbt and ops telemetry.",
+        "tagline_pt": "Lakehouse GCS + BigQuery de baixa manutencao com dbt e telemetria operacional.",
+        "summary_en": "Layered raw-stage-analytics modeling with cost-aware BigQuery patterns and scheduler-first orchestration.",
+        "summary_pt": "Modelagem em camadas raw-stage-analytics com padroes de custo e performance focados em BigQuery.",
+        "problem_en": "Teams want dependable analytics operations on GCP without taking on a huge platform surface area.",
+        "problem_pt": "Times querem analytics confiavel na GCP sem assumir uma plataforma gigante e cara de manter.",
+        "solution_en": "Practical lakehouse architecture with incremental-safe ingestion, observability tables, and lean infra.",
+        "solution_pt": "Arquitetura pratica de lakehouse com ingestao segura, tabelas de observabilidade e infra enxuta.",
+        "outcome_en": "Supports BI and activation use cases with lower maintenance and clearer operating behavior.",
+        "outcome_pt": "Suporta BI e ativacao com menos manutencao e comportamento operacional mais claro.",
+        "stack": ["Python", "dbt", "GCS", "BigQuery", "Cloud Scheduler", "Terraform"],
+        "deliverables_en": [
+            "Layered lakehouse design",
+            "Incremental and backfill-safe ingestion",
+            "BigQuery cost/performance controls",
+            "Ops datasets for runs and failures",
+        ],
+        "deliverables_pt": [
+            "Lakehouse em camadas",
+            "Ingestao incremental e segura para backfill",
+            "Controles de custo/performance no BigQuery",
+            "Datasets operacionais para runs e falhas",
+        ],
+    },
+    {
+        "slug": "aws-lakehouse-medallion",
+        "repo": "aws-lakehouse-medallion",
+        "lane": "platform",
+        "title": "AWS Lakehouse Implementation",
+        "category_en": "Lakehouse on AWS",
+        "category_pt": "Lakehouse na AWS",
+        "tagline_en": "Medallion architecture on AWS with governance signals and warehouse-grade ops controls.",
+        "tagline_pt": "Arquitetura medallion na AWS com governanca e controles operacionais de nivel warehouse.",
+        "summary_en": "S3-centric bronze-silver-gold delivery with open table format positioning, IAM/KMS governance, and observability.",
+        "summary_pt": "Entrega bronze-silver-gold centrada em S3, com formatos abertos, governanca e observabilidade.",
+        "problem_en": "AWS-first teams need lakehouse clarity without ending up with expensive, unclear data sprawl.",
+        "problem_pt": "Times AWS-first precisam de clareza de lakehouse sem cair em data sprawl caro e confuso.",
+        "solution_en": "Practical medallion implementation with curated marts, operational SLAs, and governance baked in.",
+        "solution_pt": "Implementacao medallion pratica, com marts curados, SLA operacional e governanca embarcada.",
+        "outcome_en": "Delivers a production-grade AWS analytics foundation that is easier to reason about and extend.",
+        "outcome_pt": "Entrega uma base analitica na AWS pronta para producao e facil de evoluir.",
+        "stack": ["Python", "dbt", "S3", "Glue Catalog", "CloudWatch", "Terraform"],
+        "deliverables_en": [
+            "Bronze, silver, and gold dataset flow",
+            "Governance and encryption baseline",
+            "Cost and performance optimization layer",
+            "BI-ready curated marts",
+        ],
+        "deliverables_pt": [
+            "Fluxo bronze, silver e gold",
+            "Base de governanca e criptografia",
+            "Camada de custo e performance",
+            "Marts curados prontos para BI",
+        ],
+    },
+    {
+        "slug": "dagster-dbt-orchestration-pipeline",
+        "repo": "dagster-dbt-orchestration-pipeline",
+        "lane": "platform",
+        "title": "Dagster + dbt Orchestration Pipeline",
+        "category_en": "Orchestration",
+        "category_pt": "Orquestracao",
+        "tagline_en": "Asset-oriented orchestration with dbt modeling and strong operational visibility.",
+        "tagline_pt": "Orquestracao orientada a assets com modelagem dbt e forte visibilidade operacional.",
+        "summary_en": "A practical Dagster-style delivery path for teams that want scheduled assets, replay safety, and clean warehouse transformations.",
+        "summary_pt": "Um caminho pratico em estilo Dagster para times que querem assets agendados, replay e transformacoes limpas.",
+        "problem_en": "Data teams often need more orchestration clarity than cron scripts but less complexity than overbuilt platform tooling.",
+        "problem_pt": "Times de dados precisam de mais clareza que cron scripts, mas menos complexidade que plataformas superdimensionadas.",
+        "solution_en": "A clean orchestration-first repo with asset boundaries, dbt transforms, event logs, and detail pages for handoff.",
+        "solution_pt": "Um repo focado em orquestracao com fronteiras de assets, dbt, event logs e handoff claro.",
+        "outcome_en": "Makes modern orchestration legible to non-platform teams while still looking production-ready.",
+        "outcome_pt": "Deixa a orquestracao moderna compreensivel para times enxutos sem perder cara de producao.",
+        "stack": ["Python", "Dagster-style assets", "dbt", "DuckDB", "Ops logs", "Terraform"],
+        "deliverables_en": [
+            "Asset-oriented orchestration structure",
+            "dbt transformation layer",
+            "Event logs and dead-letter flow",
+            "Replay-safe publish behavior",
+        ],
+        "deliverables_pt": [
+            "Estrutura orientada a assets",
+            "Camada dbt de transformacao",
+            "Event logs e dead-letter",
+            "Publish seguro para replay",
+        ],
+    },
+    {
+        "slug": "sql-query-optimization-workload",
+        "repo": "sql-query-optimization-workload",
+        "lane": "platform",
+        "title": "SQL Query Optimization Workload",
+        "category_en": "SQL performance",
+        "category_pt": "Performance SQL",
+        "tagline_en": "Query performance work framed as a repeatable workload with backlog and measurable savings.",
+        "tagline_pt": "Trabalho de performance SQL estruturado como workload repetivel com backlog e economia mensuravel.",
+        "summary_en": "Turns workload telemetry into ranked optimization candidates with scan, runtime, and expected savings visibility.",
+        "summary_pt": "Transforma telemetria de workload em backlog priorizado com visibilidade de scan, runtime e economia esperada.",
+        "problem_en": "Slow dashboards and expensive queries usually stay stuck in vague complaints and scattered tuning efforts.",
+        "problem_pt": "Dashboards lentos e queries caras geralmente ficam presos em reclamacoes vagas e tuning espalhado.",
+        "solution_en": "A pipeline that validates workload stats, models optimization opportunities, and publishes a tuning backlog.",
+        "solution_pt": "Um pipeline que valida workload stats, modela oportunidades e publica um backlog de otimizacao.",
+        "outcome_en": "Makes SQL performance work easier to prioritize, explain, and ship.",
+        "outcome_pt": "Facilita priorizar, explicar e executar trabalho de performance SQL.",
+        "stack": ["Python", "SQL telemetry", "dbt", "DuckDB", "BigQuery-ready backlog", "Terraform"],
+        "deliverables_en": [
+            "Query runtime and cost telemetry flow",
+            "Optimization scoring layer",
+            "Published backlog of tuning candidates",
+            "Sample optimized SQL patterns",
+        ],
+        "deliverables_pt": [
+            "Fluxo de runtime e custo de queries",
+            "Camada de scoring para otimizacao",
+            "Backlog publicado de tuning",
+            "Exemplos de SQL otimizado",
+        ],
+    },
+    {
+        "slug": "meta-ads-to-bigquery-pipeline",
+        "repo": "meta-ads-to-bigquery-pipeline",
+        "lane": "marketing",
+        "title": "Meta Ads Data Pipeline",
+        "category_en": "Paid media integration",
+        "category_pt": "Integracao de midia paga",
+        "tagline_en": "Meta Ads ingestion, normalization, attribution-ready modeling, and reliable publish controls.",
+        "tagline_pt": "Ingestao de Meta Ads, normalizacao, modelagem pronta para atribuicao e controle confiavel de publish.",
+        "summary_en": "Campaign, ad set, ad, spend, click, lead, and conversion data modeled for reporting and CRM activation.",
+        "summary_pt": "Campanhas, conjuntos, anuncios, spend, cliques, leads e conversoes modelados para reporting e ativacao em CRM.",
+        "problem_en": "Paid media teams need clean marketing data fast, but hourly syncs often duplicate, drift, or break silently.",
+        "problem_pt": "Times de midia paga precisam de dados limpos rapido, mas sincronizacoes por hora costumam duplicar ou quebrar.",
+        "solution_en": "A pipeline with idempotent syncs, UTM normalization, validation queries, and visible operational behavior.",
+        "solution_pt": "Um pipeline com sync idempotente, normalizacao de UTM, queries de validacao e operacao visivel.",
+        "outcome_en": "Keeps marketing reporting and downstream activation reliable without spreadsheet cleanup.",
+        "outcome_pt": "Mantem reporting de marketing e ativacao confiaveis sem limpeza manual em planilhas.",
+        "stack": ["Python", "Meta Ads", "dbt", "BigQuery", "Outbox", "GitHub Actions"],
+        "deliverables_en": [
+            "Raw-to-analytics paid media modeling",
+            "UTM normalization and attribution support",
+            "Retry-safe publish and dead-letter flow",
+            "Hourly operational observability",
+        ],
+        "deliverables_pt": [
+            "Modelagem raw-to-analytics de midia paga",
+            "Normalizacao de UTM e suporte a atribuicao",
+            "Publish seguro com retries e dead-letter",
+            "Observabilidade operacional horaria",
+        ],
+    },
+    {
+        "slug": "appsflyer-to-bigquery-integration",
+        "repo": "appsflyer-to-bigquery-integration",
+        "lane": "marketing",
+        "title": "AppsFlyer to BigQuery Integration",
+        "category_en": "Mobile attribution",
+        "category_pt": "Atribuicao mobile",
+        "tagline_en": "AppsFlyer installs, in-app events, and cost data normalized for warehouse analytics.",
+        "tagline_pt": "Installs, eventos in-app e custo de AppsFlyer normalizados para analytics em warehouse.",
+        "summary_en": "A mobile growth integration with event normalization, campaign cost reconciliation, and publish-safe delivery.",
+        "summary_pt": "Uma integracao para mobile growth com normalizacao de eventos, conciliacao de custo e entrega segura.",
+        "problem_en": "Mobile acquisition data is valuable, but attribution feeds often arrive fragmented and hard to trust.",
+        "problem_pt": "Dados de aquisicao mobile sao valiosos, mas os feeds de atribuicao chegam fragmentados e dificeis de confiar.",
+        "solution_en": "A Python + dbt integration path for installs, in-app events, campaign costs, and downstream analytics.",
+        "solution_pt": "Um caminho de integracao em Python + dbt para installs, eventos in-app, custos e analytics downstream.",
+        "outcome_en": "Creates cleaner mobile attribution reporting and a safer foundation for activation or ROI analysis.",
+        "outcome_pt": "Cria reporting de atribuicao mobile mais limpo e uma base melhor para ativacao ou analise de ROI.",
+        "stack": ["Python", "AppsFlyer", "dbt", "BigQuery", "Attribution modeling", "Ops logs"],
+        "deliverables_en": [
+            "Install and event normalization",
+            "Campaign cost reconciliation",
+            "Analytics-ready attribution marts",
+            "Replay-safe publish flow",
+        ],
+        "deliverables_pt": [
+            "Normalizacao de installs e eventos",
+            "Conciliacao de custo de campanha",
+            "Marts de atribuicao prontos para analytics",
+            "Fluxo de publish seguro para replay",
+        ],
+    },
+    {
+        "slug": "ga4-to-bigquery-integration",
+        "repo": "ga4-to-bigquery-integration",
+        "lane": "marketing",
+        "title": "GA4 to BigQuery Integration",
+        "category_en": "Web analytics integration",
+        "category_pt": "Integracao de web analytics",
+        "tagline_en": "GA4 session and conversion handling packaged into a BigQuery-friendly analytics foundation.",
+        "tagline_pt": "Tratamento de sessoes e conversoes do GA4 empacotado em uma base analitica pronta para BigQuery.",
+        "summary_en": "Session, conversion, and traffic-source data normalized for cleaner growth reporting and channel analysis.",
+        "summary_pt": "Dados de sessao, conversao e origem de trafego normalizados para reporting de growth mais limpo.",
+        "problem_en": "GA4 exports are useful but messy when teams need stable warehouse models and channel reporting.",
+        "problem_pt": "Exports do GA4 sao uteis, mas ficam confusos quando o time precisa de modelos estaveis e reporting por canal.",
+        "solution_en": "A structured integration layer with normalized sessions, conversions, traffic data, and audit-friendly ops logs.",
+        "solution_pt": "Uma camada estruturada com sessoes, conversoes, trafego e logs operacionais auditaveis.",
+        "outcome_en": "Makes GA4 data more usable for reporting, attribution, and operational downstream workflows.",
+        "outcome_pt": "Deixa os dados de GA4 mais usaveis para reporting, atribuicao e fluxos operacionais downstream.",
+        "stack": ["Python", "GA4", "dbt", "BigQuery", "Traffic source marts", "Ops logs"],
+        "deliverables_en": [
+            "Normalized sessions and conversions",
+            "Traffic-source reporting layer",
+            "Warehouse-ready analytics marts",
+            "Replay and dead-letter controls",
+        ],
+        "deliverables_pt": [
+            "Sessoes e conversoes normalizadas",
+            "Camada de reporting por origem de trafego",
+            "Marts prontos para warehouse",
+            "Controles de replay e dead-letter",
+        ],
+    },
+    {
+        "slug": "trend-detection-signal-pipeline",
+        "repo": "trend-detection-signal-pipeline",
+        "lane": "automation",
+        "title": "Trend Detection Signal Pipeline",
+        "category_en": "Signal intelligence",
+        "category_pt": "Signal intelligence",
+        "tagline_en": "News, social, and search data combined into a trend-scoring pipeline for alert-ready outputs.",
+        "tagline_pt": "Dados de news, social e search combinados em um pipeline de trend scoring pronto para alertas.",
+        "summary_en": "A signal pipeline for discovering rising topics with normalized scoring, warehouse models, and safe publish behavior.",
+        "summary_pt": "Um pipeline de sinais para descobrir topicos em alta com scoring normalizado e publish seguro.",
+        "problem_en": "Trend work is usually scattered across feeds, social dashboards, and search tools with no central scoring logic.",
+        "problem_pt": "Trend work costuma ficar espalhado entre feeds, dashboards sociais e ferramentas de busca sem score central.",
+        "solution_en": "A generic but production-styled pipeline that ingests multi-source signals and publishes ranked topic outputs.",
+        "solution_pt": "Um pipeline generico mas com cara de producao que ingere sinais de varias fontes e publica topicos ranqueados.",
+        "outcome_en": "Gives content, growth, or research teams a cleaner operating model for spotting and acting on momentum.",
+        "outcome_pt": "Da a times de content, growth ou research uma forma mais limpa de detectar e agir sobre momentum.",
+        "stack": ["Python", "Signal scoring", "dbt", "DuckDB", "Alert-ready outputs", "Observability"],
+        "deliverables_en": [
+            "News, social, and search ingestion model",
+            "Normalized scoring layer",
+            "Trend-ranking analytics mart",
+            "Alert-ready publish output",
+        ],
+        "deliverables_pt": [
+            "Modelo de ingestao de news, social e search",
+            "Camada de scoring normalizado",
+            "Mart analitico de ranking de trends",
+            "Saida pronta para alertas",
+        ],
+    },
+    {
+        "slug": "ai-automation-engineer-workflows",
+        "repo": "ai-automation-engineer-workflows",
+        "lane": "automation",
+        "title": "AI Automation Engineer Workflows",
+        "category_en": "AI operations",
+        "category_pt": "Operacoes com AI",
+        "tagline_en": "Agent-driven email, CRM, and task workflows built with strong operational controls.",
+        "tagline_pt": "Fluxos com agentes para email, CRM e tarefas construidos com controles operacionais fortes.",
+        "summary_en": "A production-style AI automation repo focused on workflows, contracts, logs, routing rules, and auditability.",
+        "summary_pt": "Um repo de AI automation com cara de producao, focado em workflows, contratos, logs e auditabilidade.",
+        "problem_en": "Many AI automations look impressive in demos but fail once routing, retries, and business accountability matter.",
+        "problem_pt": "Muitas automacoes com AI impressionam em demo, mas falham quando roteamento, retries e accountability importam.",
+        "solution_en": "Structured inbox ingestion, CRM task logic, agent action records, and replay-safe publish behavior.",
+        "solution_pt": "Ingestao estruturada de inbox, logica de tarefas em CRM, registros de acoes do agente e publish seguro para replay.",
+        "outcome_en": "Makes AI automation feel operationally real instead of fragile prompt glue.",
+        "outcome_pt": "Faz AI automation parecer operacionalmente real, e nao apenas um prompt frágil.",
+        "stack": ["Python", "AI workflow patterns", "CRM automation", "dbt", "Event logs", "Outbox"],
+        "deliverables_en": [
+            "Email and task routing pipeline",
+            "Agent action contracts",
+            "CRM automation model",
+            "Audit-friendly operational telemetry",
+        ],
+        "deliverables_pt": [
+            "Pipeline de roteamento de emails e tarefas",
+            "Contratos para acoes do agente",
+            "Modelo de automacao em CRM",
+            "Telemetria operacional auditavel",
+        ],
+    },
+]
