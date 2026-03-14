@@ -3,8 +3,6 @@ from __future__ import annotations
 import html
 import shutil
 from pathlib import Path
-from urllib.parse import quote
-
 try:
     from .content import LANES, PROJECTS, SITE
 except ImportError:
@@ -38,12 +36,8 @@ def repo_url(repo: str) -> str:
     return f"https://github.com/brunoluizmendes/{repo}"
 
 
-def mailto_url(subject: str) -> str:
-    return f"mailto:{SITE['email']}?subject={quote(subject)}"
-
-
 def cta_url() -> str:
-    return SITE["calendly_url"] or mailto_url("Upwork portfolio inquiry")
+    return SITE["calendly_url"] or SITE["upwork_url"]
 
 
 def t(language: str, en: str, pt: str) -> str:
@@ -166,13 +160,8 @@ def header_markup(language: str, route: str) -> str:
 
 
 def footer_markup(language: str) -> str:
-    book_label = t(language, "Start a project", "Iniciar projeto")
-    book_url = cta_url()
-    note = t(
-        language,
-        "Calendly will be added later. For now, email or Upwork is the fastest path.",
-        "O Calendly entra depois. Por enquanto, email ou Upwork e o caminho mais rapido.",
-    )
+    primary_label = t(language, "Start on Upwork", "Comecar no Upwork")
+    secondary_label = t(language, "Connect on LinkedIn", "Conectar no LinkedIn")
     return f"""<footer class="site-footer" id="contact">
   <div class="footer-grid">
     <div>
@@ -181,15 +170,12 @@ def footer_markup(language: str) -> str:
       <p class="footer-copy">{html.escape(t(language, SITE['about_en'], SITE['about_pt']))}</p>
     </div>
     <div class="footer-actions">
-      <a href="{book_url}" class="button button-primary">{html.escape(book_label)}</a>
-      <a href="{SITE['upwork_url']}" class="button button-secondary" target="_blank" rel="noreferrer">Upwork</a>
-      <a href="mailto:{SITE['email']}" class="button button-ghost">{SITE['email']}</a>
-      <p class="footer-note">{html.escape(note)}</p>
+      <a href="{SITE['upwork_url']}" class="button button-primary" target="_blank" rel="noreferrer">{html.escape(primary_label)}</a>
+      <a href="{SITE['linkedin_url']}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}</a>
     </div>
   </div>
   <div class="footer-meta">
     <div class="footer-links">
-      <a href="{SITE['github_url']}" target="_blank" rel="noreferrer">GitHub</a>
       <a href="{SITE['linkedin_url']}" target="_blank" rel="noreferrer">LinkedIn</a>
       <a href="{SITE['upwork_url']}" target="_blank" rel="noreferrer">Upwork</a>
     </div>
@@ -288,15 +274,13 @@ def hero_carousel_markup(language: str) -> str:
 
 def hero_markup(language: str) -> str:
     actions = []
-    primary_label = t(language, "Start a project", "Iniciar projeto")
-    secondary_label = t(language, "Upwork", "Upwork")
-    tertiary_label = t(language, "LinkedIn", "LinkedIn")
-    actions.append(f'<a href="{cta_url()}" class="button button-primary">{html.escape(primary_label)}</a>')
+    primary_label = t(language, "Start on Upwork", "Comecar no Upwork")
+    secondary_label = t(language, "Connect on LinkedIn", "Conectar no LinkedIn")
     actions.append(
-        f'<a href="{SITE["upwork_url"]}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}</a>'
+        f'<a href="{cta_url()}" class="button button-primary" target="_blank" rel="noreferrer">{html.escape(primary_label)}</a>'
     )
     actions.append(
-        f'<a href="{SITE["linkedin_url"]}" class="button button-ghost" target="_blank" rel="noreferrer">{html.escape(tertiary_label)}</a>'
+        f'<a href="{SITE["linkedin_url"]}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}</a>'
     )
     proof = "".join(f"<span>{html.escape(item)}</span>" for item in SITE["proof_ribbon"])
     stats = "".join(
@@ -432,7 +416,7 @@ def project_detail_markup(language: str, project: dict) -> str:
       <div class="hero-actions">
         <a href="{repo_href}" class="button button-primary" target="_blank" rel="noreferrer">GitHub</a>
         <a href="{SITE['upwork_url']}" class="button button-secondary" target="_blank" rel="noreferrer">Upwork</a>
-        <a href="mailto:{SITE['email']}" class="button button-ghost">{SITE['email']}</a>
+        <a href="{SITE['linkedin_url']}" class="button button-ghost" target="_blank" rel="noreferrer">LinkedIn</a>
       </div>
     </div>
     <div class="detail-panel">
@@ -856,9 +840,9 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(3rem, 6vw, 6rem);
-  line-height: 0.95;
-  max-width: 10ch;
+  font-size: clamp(2.4rem, 4.8vw, 4.6rem);
+  line-height: 0.98;
+  max-width: 11ch;
 }
 
 h2 {
@@ -877,8 +861,7 @@ h3 {
 .project-tagline,
 .detail-panel p,
 .detail-card p,
-.footer-copy,
-.footer-note {
+.footer-copy {
   color: var(--text-soft);
   line-height: 1.7;
 }
@@ -1148,7 +1131,7 @@ h3 {
 .hero-stats {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -1388,7 +1371,7 @@ h3 {
   }
 
   .hero-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .lane-heading,
@@ -1437,7 +1420,7 @@ h3 {
   }
 
   h1 {
-    font-size: clamp(2.6rem, 12vw, 4rem);
+    font-size: clamp(2.1rem, 10vw, 3.1rem);
   }
 
   .brand-text span {

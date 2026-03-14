@@ -15,7 +15,6 @@ SITE = {
     "role_pt": "Data Engineering + Sistemas de AI",
     "location_en": "Built for finance, ops, marketing, and growth teams.",
     "location_pt": "Feito para times de financas, operacoes, marketing e growth.",
-    "email": "mendesbruno@outlook.com",
     "github_url": "https://github.com/brunoluizmendes",
     "linkedin_url": "https://www.linkedin.com/in/brunoluizmendes/",
     "upwork_url": "https://www.upwork.com/freelancers/~015610c5abb8e28a49?mp_source=share",
@@ -29,19 +28,24 @@ SITE = {
     },
     "stats": [
         {
-            "value": "14",
+            "value": "+30",
             "label_en": "clients served",
             "label_pt": "clientes atendidos",
         },
         {
             "value": "13,330+",
-            "label_en": "lines of code shipped",
-            "label_pt": "linhas de codigo entregues",
+            "label_en": "lines of pipelines, SQL, IaC, and automation assets",
+            "label_pt": "linhas de pipelines, SQL, IaC e automacao",
         },
         {
-            "value": "Ops-ready",
-            "label_en": "logs, monitoring, and safe replay paths",
-            "label_pt": "logs, monitoramento e replay seguro",
+            "value": "GCP + AWS",
+            "label_en": "delivery across cloud, warehouse, and activation stacks",
+            "label_pt": "entrega em cloud, warehouse e stacks de ativacao",
+        },
+        {
+            "value": "Ops-grade",
+            "label_en": "logs, monitoring, retries, dead-letter, and replay paths",
+            "label_pt": "logs, monitoramento, retries, dead-letter e replay",
         },
     ],
     "proof_ribbon": [
