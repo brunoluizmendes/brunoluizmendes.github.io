@@ -58,6 +58,10 @@ def featured_projects() -> list[dict]:
     return sorted(featured, key=lambda item: FEATURED_PROJECT_SLUGS.index(item["slug"]))
 
 
+def project_lane(project: dict) -> dict:
+    return lane_by_key()[project["lane"]]
+
+
 def route_prefix(language: str) -> str:
     return "" if language == "en" else "/pt"
 
@@ -79,6 +83,24 @@ def page_description(language: str, custom_description: str | None = None) -> st
     return custom_description or t(language, SITE["subheadline_en"], SITE["subheadline_pt"])
 
 
+def theme_bootstrap_script() -> str:
+    return """<script>
+(() => {
+  const key = "b-tech-theme";
+  let theme = "dark";
+  try {
+    const stored = window.localStorage.getItem(key);
+    if (stored === "light" || stored === "dark") {
+      theme = stored;
+    }
+  } catch (error) {
+    theme = "dark";
+  }
+  document.documentElement.setAttribute("data-theme", theme);
+})();
+</script>"""
+
+
 def head_markup(language: str, route: str, title: str | None = None, description: str | None = None) -> str:
     canonical = f"{SITE['site_url']}{route}"
     alternate_language = "pt-BR" if language == "en" else "en"
@@ -95,7 +117,7 @@ def head_markup(language: str, route: str, title: str | None = None, description
   <title>{page_title_text}</title>
   <meta name="description" content="{page_description_text}">
   <meta name="robots" content="index,follow">
-  <meta name="theme-color" content="{SITE['palette']['secondary']}">
+  <meta name="theme-color" content="{SITE['palette']['secondary']}" id="theme-color-meta">
   <meta property="og:title" content="{page_title_text}">
   <meta property="og:description" content="{page_description_text}">
   <meta property="og:type" content="website">
@@ -113,6 +135,7 @@ def head_markup(language: str, route: str, title: str | None = None, description
   <link rel="alternate" hreflang="x-default" href="{SITE['site_url']}/">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="manifest" href="/site.webmanifest">
+  {theme_bootstrap_script()}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -137,6 +160,10 @@ def header_markup(language: str, route: str) -> str:
     switch_to = language_href(language, route)
     switch_label = "PT" if language == "en" else "EN"
     current_label = "EN" if language == "en" else "PT"
+    theme_dark = t(language, "Dark", "Dark")
+    theme_light = t(language, "Light", "Light")
+    theme_to_light = t(language, "Switch to light mode", "Mudar para modo claro")
+    theme_to_dark = t(language, "Switch to dark mode", "Mudar para modo escuro")
     return f"""<header class="site-header" data-open="false">
   <a class="brand" href="{home}">
     <img src="/assets/brand-mark.svg" alt="{html.escape(SITE['logo_alt'])}" class="brand-mark">
@@ -151,6 +178,17 @@ def header_markup(language: str, route: str) -> str:
   <nav class="site-nav">
     {nav}
     <a href="{SITE['upwork_url']}" class="nav-link nav-link-cta" target="_blank" rel="noreferrer">Upwork</a>
+    <button
+      class="theme-switch"
+      type="button"
+      data-theme-toggle
+      data-label-dark="{html.escape(theme_to_dark)}"
+      data-label-light="{html.escape(theme_to_light)}"
+      aria-label="{html.escape(theme_to_light)}"
+    >
+      <span class="theme-option theme-option-dark">{html.escape(theme_dark)}</span>
+      <span class="theme-option theme-option-light">{html.escape(theme_light)}</span>
+    </button>
     <a href="{switch_to}" class="lang-switch" hreflang="{switch_label.lower()}">
       <span class="lang-current">{current_label}</span>
       <span class="lang-next">{switch_label}</span>
@@ -398,11 +436,127 @@ def home_markup(language: str) -> str:
 </main>"""
 
 
+def project_profile(language: str, project: dict) -> dict[str, list[str] | str]:
+    lane = project["lane"]
+    profiles = {
+        "platform": {
+            "posture_en": "Cost-aware warehouse operations",
+            "posture_pt": "Operacao de warehouse com foco em custo",
+            "buyer_en": [
+                "Turns platform work into a visible backlog with cost, runtime, and handoff clarity.",
+                "Fits teams that need warehouse performance without creating a larger platform burden.",
+                "Keeps dbt and operational telemetry aligned so internal teams can keep iterating.",
+            ],
+            "buyer_pt": [
+                "Transforma trabalho de plataforma em backlog visivel com clareza de custo, runtime e handoff.",
+                "Atende times que precisam de performance de warehouse sem criar uma operacao de plataforma maior.",
+                "Mantem dbt e telemetria operacional alinhados para o time interno continuar evoluindo.",
+            ],
+        },
+        "finance": {
+            "posture_en": "Audit-friendly automation delivery",
+            "posture_pt": "Automacao com postura auditavel",
+            "buyer_en": [
+                "Reduces manual finance work while preserving reconciliation and traceability.",
+                "Useful when recurring browser or ERP workflows need operational control, not just scripts.",
+                "Keeps downstream accounting, BI, and ops consumers working with validated outputs.",
+            ],
+            "buyer_pt": [
+                "Reduz trabalho manual em financas sem perder conciliacao nem rastreabilidade.",
+                "Serve para fluxos recorrentes de portal ou ERP que precisam de controle operacional, nao so scripts.",
+                "Mantem accounting, BI e operacao consumindo dados validados no downstream.",
+            ],
+        },
+        "marketing": {
+            "posture_en": "Attribution-ready marketing data",
+            "posture_pt": "Dados de marketing prontos para atribuicao",
+            "buyer_en": [
+                "Connects media, analytics, and CRM flows without duplicate syncs or broken attribution.",
+                "Works well for growth teams that need reporting and activation from the same delivery path.",
+                "Keeps hourly or daily operations visible with retry, dead-letter, and replay-safe behavior.",
+            ],
+            "buyer_pt": [
+                "Conecta midia, analytics e CRM sem sync duplicado nem atribuicao quebrada.",
+                "Funciona bem para times de growth que precisam de reporting e ativacao na mesma entrega.",
+                "Mantem operacao horaria ou diaria visivel com retry, dead-letter e replay seguro.",
+            ],
+        },
+        "automation": {
+            "posture_en": "Controlled AI and signal workflows",
+            "posture_pt": "Fluxos de AI e sinais com controle",
+            "buyer_en": [
+                "Frames AI and signal automation as an operations system, not a demo.",
+                "Useful when teams want faster execution but still need logs, contracts, and rollback-safe flows.",
+                "Helps connect inbound signals, decisions, and downstream actions in a maintainable way.",
+            ],
+            "buyer_pt": [
+                "Enquadra AI e automacao de sinais como sistema operacional, nao como demo.",
+                "Serve quando o time quer acelerar execucao, mas ainda precisa de logs, contratos e rollback seguro.",
+                "Ajuda a conectar sinais de entrada, decisoes e acoes de downstream de forma sustentavel.",
+            ],
+        },
+    }
+    profile = profiles[lane]
+    return {
+        "posture": t(language, profile["posture_en"], profile["posture_pt"]),
+        "buyer_points": list(t(language, en, pt) for en, pt in zip(profile["buyer_en"], profile["buyer_pt"])),
+    }
+
+
+def project_control_points(language: str, project: dict) -> list[str]:
+    items = [
+        (
+            "Structured logs, validation steps, and predictable run behavior.",
+            "Logs estruturados, validacoes e execucao previsivel.",
+        ),
+        (
+            "Replay-safe processing paths designed to reduce duplicate work and broken publishes.",
+            "Fluxos seguros para replay, pensados para reduzir duplicidade e publish quebrado.",
+        ),
+        (
+            "Repository structure that another engineer can extend without re-learning the whole system.",
+            "Estrutura de repositorio que outro engenheiro consegue evoluir sem reaprender o sistema todo.",
+        ),
+    ]
+    return [t(language, en, pt) for en, pt in items]
+
+
 def project_detail_markup(language: str, project: dict) -> str:
     repo_href = repo_url(project["repo"])
+    lane = project_lane(project)
+    profile = project_profile(language, project)
     deliverables = "".join(
         f"<li>{html.escape(t(language, en, pt))}</li>"
         for en, pt in zip(project["deliverables_en"], project["deliverables_pt"])
+    )
+    stack_items = ''.join(f'<li>{html.escape(item)}</li>' for item in project['stack'])
+    headline_stack = ''.join(f'<li>{html.escape(item)}</li>' for item in project['stack'][:4])
+    buyer_points = "".join(f"<li>{html.escape(item)}</li>" for item in profile["buyer_points"])
+    control_points = "".join(f"<li>{html.escape(item)}</li>" for item in project_control_points(language, project))
+    proof_cards = (
+        {
+            "title": t(language, "Delivery lane", "Frente de entrega"),
+            "value": t(language, lane["title_en"], lane["title_pt"]),
+            "body": t(language, lane["body_en"], lane["body_pt"]),
+        },
+        {
+            "title": t(language, "Repository scope", "Escopo do repositorio"),
+            "value": t(language, f"{len(project['deliverables_en'])} core delivery blocks", f"{len(project['deliverables_pt'])} blocos centrais"),
+            "body": t(language, "A compact build with practical deliverables and visible operating behavior.", "Uma entrega compacta com blocos praticos e comportamento operacional visivel."),
+        },
+        {
+            "title": t(language, "Operating posture", "Postura operacional"),
+            "value": str(profile["posture"]),
+            "body": t(language, "Designed to look real in production, not just present well in a portfolio.", "Pensado para parecer uma entrega real de producao, nao apenas um portfolio bonito."),
+        },
+    )
+    proof_markup = "".join(
+        f"""<article class="detail-proof-card" data-reveal>
+  <p class="detail-proof-kicker">{html.escape(item['title'])}</p>
+  <strong>{html.escape(item['value'])}</strong>
+  <span>{html.escape(item['body'])}</span>
+</article>"""
+        for item in proof_cards
     )
     related = "".join(
         project_card(language, item, detailed=True) for item in PROJECTS if item["lane"] == project["lane"] and item["slug"] != project["slug"]
@@ -418,6 +572,7 @@ def project_detail_markup(language: str, project: dict) -> str:
         <a href="{SITE['upwork_url']}" class="button button-secondary" target="_blank" rel="noreferrer">Upwork</a>
         <a href="{SITE['linkedin_url']}" class="button button-ghost" target="_blank" rel="noreferrer">LinkedIn</a>
       </div>
+      <ul class="detail-stack-preview">{headline_stack}</ul>
     </div>
     <div class="detail-panel">
       <div class="detail-chip">{html.escape(t(language, 'Problem', 'Problema'))}</div>
@@ -428,16 +583,27 @@ def project_detail_markup(language: str, project: dict) -> str:
       <p>{html.escape(t(language, project['outcome_en'], project['outcome_pt']))}</p>
     </div>
   </section>
+  <section class="section detail-proof-grid">
+    {proof_markup}
+  </section>
   <section class="section detail-content">
-    <div class="detail-grid">
+    <div class="detail-grid detail-grid-rich">
       <article class="detail-card" data-reveal>
         <h2>{html.escape(t(language, 'What ships in this repository', 'O que entra neste repositorio'))}</h2>
         <ul class="detail-list">{deliverables}</ul>
       </article>
       <article class="detail-card" data-reveal>
         <h2>{html.escape(t(language, 'Stack and operating model', 'Stack e modelo operacional'))}</h2>
-        <ul class="stack-list">{''.join(f'<li>{html.escape(item)}</li>' for item in project['stack'])}</ul>
+        <ul class="stack-list">{stack_items}</ul>
         <p>{html.escape(t(language, project['summary_en'], project['summary_pt']))}</p>
+      </article>
+      <article class="detail-card detail-card-emphasis" data-reveal>
+        <h2>{html.escape(t(language, 'Why buyers pick this type of build', 'Por que esse tipo de entrega vende'))}</h2>
+        <ul class="detail-list">{buyer_points}</ul>
+      </article>
+      <article class="detail-card" data-reveal>
+        <h2>{html.escape(t(language, 'How delivery stays reliable', 'Como a entrega fica confiavel'))}</h2>
+        <ul class="detail-list">{control_points}</ul>
       </article>
     </div>
   </section>
@@ -610,6 +776,7 @@ def svg_slide_revenue_automation() -> str:
 def site_css() -> str:
     return """
 :root {
+  color-scheme: dark;
   --bg: #09051d;
   --bg-elevated: #120b33;
   --bg-soft: rgba(231, 231, 231, 0.08);
@@ -627,6 +794,68 @@ def site_css() -> str:
   --radius: 28px;
   --radius-sm: 18px;
   --content: 1160px;
+  --theme-color: #1D057D;
+  --header-surface: rgba(9, 5, 29, 0.72);
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --gradient-a: rgba(254, 1, 127, 0.9);
+  --gradient-b: rgba(29, 5, 125, 1);
+  --stage-base: rgba(255, 255, 255, 0.05);
+  --stage-glow-a: rgba(254, 1, 127, 0.22);
+  --stage-glow-b: rgba(29, 5, 125, 0.35);
+  --brand-chip-bg: rgba(9, 5, 29, 0.7);
+  --brand-chip-line: rgba(255, 255, 255, 0.14);
+  --carousel-shell-bg: rgba(7, 4, 24, 0.48);
+  --carousel-shell-line: rgba(255, 255, 255, 0.14);
+  --carousel-caption-bg: rgba(9, 5, 29, 0.72);
+  --carousel-caption-line: rgba(255, 255, 255, 0.12);
+  --button-secondary-bg: rgba(255, 255, 255, 0.08);
+  --button-secondary-line: rgba(255, 255, 255, 0.14);
+  --button-ghost-color: rgba(245, 239, 255, 0.76);
+  --pill-surface: rgba(255, 255, 255, 0.04);
+  --terminal-code: #ffcaeb;
+  --stat-surface: rgba(255, 255, 255, 0.05);
+  --footer-surface: linear-gradient(135deg, rgba(29, 5, 125, 0.58), rgba(19, 12, 51, 0.94));
+  --theme-switch-bg: rgba(255, 255, 255, 0.06);
+  --theme-switch-thumb: rgba(255, 255, 255, 0.14);
+  --theme-switch-text: rgba(245, 239, 255, 0.64);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-soft: rgba(17, 24, 39, 0.03);
+  --card: rgba(255, 255, 255, 0.94);
+  --card-strong: rgba(255, 255, 255, 0.98);
+  --text: #15122b;
+  --text-soft: rgba(21, 18, 43, 0.78);
+  --text-muted: rgba(21, 18, 43, 0.56);
+  --line: rgba(21, 18, 43, 0.1);
+  --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  --theme-color: #ffffff;
+  --header-surface: rgba(255, 255, 255, 0.94);
+  --grid-line: rgba(21, 18, 43, 0.05);
+  --gradient-a: rgba(254, 1, 127, 0.14);
+  --gradient-b: rgba(29, 5, 125, 0.08);
+  --stage-base: rgba(255, 255, 255, 0.88);
+  --stage-glow-a: rgba(254, 1, 127, 0.08);
+  --stage-glow-b: rgba(29, 5, 125, 0.06);
+  --brand-chip-bg: rgba(255, 255, 255, 0.94);
+  --brand-chip-line: rgba(21, 18, 43, 0.08);
+  --carousel-shell-bg: rgba(255, 255, 255, 0.94);
+  --carousel-shell-line: rgba(21, 18, 43, 0.08);
+  --carousel-caption-bg: rgba(255, 255, 255, 0.94);
+  --carousel-caption-line: rgba(21, 18, 43, 0.1);
+  --button-secondary-bg: rgba(21, 18, 43, 0.04);
+  --button-secondary-line: rgba(21, 18, 43, 0.1);
+  --button-ghost-color: #1d057d;
+  --pill-surface: rgba(21, 18, 43, 0.04);
+  --terminal-code: #8f135d;
+  --stat-surface: rgba(255, 255, 255, 0.96);
+  --footer-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 247, 250, 1));
+  --theme-switch-bg: rgba(21, 18, 43, 0.04);
+  --theme-switch-thumb: rgba(21, 18, 43, 0.08);
+  --theme-switch-text: rgba(21, 18, 43, 0.58);
 }
 
 *,
@@ -677,7 +906,7 @@ img {
   height: 36rem;
   top: -10rem;
   right: -8rem;
-  background: radial-gradient(circle, rgba(254, 1, 127, 0.9), rgba(254, 1, 127, 0));
+  background: radial-gradient(circle, var(--gradient-a), rgba(254, 1, 127, 0));
 }
 
 .gradient-b {
@@ -685,15 +914,15 @@ img {
   height: 28rem;
   left: -8rem;
   top: 24rem;
-  background: radial-gradient(circle, rgba(29, 5, 125, 1), rgba(29, 5, 125, 0));
+  background: radial-gradient(circle, var(--gradient-b), rgba(29, 5, 125, 0));
 }
 
 .grid-overlay {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 42px 42px;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent 88%);
 }
@@ -715,7 +944,7 @@ main,
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: rgba(9, 5, 29, 0.72);
+  background: var(--header-surface);
   border: 1px solid var(--line);
   backdrop-filter: blur(16px);
   border-radius: 999px;
@@ -755,13 +984,15 @@ main,
 }
 
 .nav-link,
-.lang-switch {
+.lang-switch,
+.theme-switch {
   color: var(--text-soft);
   font-size: 0.92rem;
 }
 
 .nav-link:hover,
 .lang-switch:hover,
+.theme-switch:hover,
 .inline-link:hover,
 .footer-links a:hover {
   color: var(--text);
@@ -778,6 +1009,52 @@ main,
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 999px;
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  width: 6.8rem;
+  padding: 0.24rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--theme-switch-bg);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.theme-switch::after {
+  content: "";
+  position: absolute;
+  top: 0.24rem;
+  left: 0.24rem;
+  width: calc(50% - 0.24rem);
+  height: calc(100% - 0.48rem);
+  border-radius: 999px;
+  background: var(--theme-switch-thumb);
+  transition: transform 180ms ease;
+}
+
+html[data-theme="light"] .theme-switch::after {
+  transform: translateX(100%);
+}
+
+.theme-option {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0.32rem 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--theme-switch-text);
+}
+
+html[data-theme="dark"] .theme-option-dark,
+html[data-theme="light"] .theme-option-light {
+  color: var(--text);
 }
 
 .lang-current {
@@ -908,13 +1185,14 @@ h3 {
 }
 
 .button-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: var(--button-secondary-bg);
+  border-color: var(--button-secondary-line);
+  color: var(--text);
 }
 
 .button-ghost {
   border-color: var(--line);
-  color: var(--text-soft);
+  color: var(--button-ghost-color);
 }
 
 .proof-ribbon {
@@ -933,7 +1211,7 @@ h3 {
   padding: 0.45rem 0.78rem;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--pill-surface);
   color: var(--text-soft);
   font-size: 0.82rem;
 }
@@ -949,9 +1227,9 @@ h3 {
   border-radius: var(--radius);
   padding: 1.25rem;
   background:
-    radial-gradient(circle at 28% 25%, rgba(254, 1, 127, 0.22), transparent 46%),
-    radial-gradient(circle at 72% 76%, rgba(29, 5, 125, 0.35), transparent 40%),
-    rgba(255, 255, 255, 0.05);
+    radial-gradient(circle at 28% 25%, var(--stage-glow-a), transparent 46%),
+    radial-gradient(circle at 72% 76%, var(--stage-glow-b), transparent 40%),
+    var(--stage-base);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -989,8 +1267,8 @@ h3 {
   gap: 0.65rem;
   padding: 0.7rem 0.95rem;
   border-radius: 999px;
-  background: rgba(9, 5, 29, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--brand-chip-bg);
+  border: 1px solid var(--brand-chip-line);
   backdrop-filter: blur(12px);
 }
 
@@ -1009,8 +1287,8 @@ h3 {
   inset: 1.2rem;
   border-radius: calc(var(--radius) - 10px);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(7, 4, 24, 0.48);
+  border: 1px solid var(--carousel-shell-line);
+  background: var(--carousel-shell-bg);
 }
 
 .carousel-slide {
@@ -1041,8 +1319,8 @@ h3 {
   gap: 0.35rem;
   padding: 1rem 1.1rem;
   border-radius: 22px;
-  background: rgba(9, 5, 29, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--carousel-caption-bg);
+  border: 1px solid var(--carousel-caption-line);
   backdrop-filter: blur(10px);
 }
 
@@ -1124,21 +1402,21 @@ h3 {
   display: grid;
   gap: 0.6rem;
   font-family: "IBM Plex Mono", monospace;
-  color: #ffcaeb;
+  color: var(--terminal-code);
   white-space: pre-wrap;
 }
 
 .hero-stats {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
 .stat {
   padding: 1.2rem 1.4rem;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--stat-surface);
   border: 1px solid var(--line);
 }
 
@@ -1309,6 +1587,24 @@ h3 {
   color: var(--text-soft);
 }
 
+.detail-stack-preview {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.detail-stack-preview li {
+  padding: 0.48rem 0.78rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--pill-surface);
+  color: var(--text-soft);
+  font-size: 0.82rem;
+}
+
 .detail-panel {
   padding: 1.4rem;
 }
@@ -1317,10 +1613,59 @@ h3 {
   margin-bottom: 0.8rem;
 }
 
+.detail-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.detail-proof-card {
+  padding: 1.3rem 1.35rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.detail-proof-kicker {
+  margin: 0 0 0.85rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.detail-proof-card strong {
+  display: block;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.18rem;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.detail-proof-card span {
+  color: var(--text-soft);
+}
+
 .detail-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.detail-grid-rich {
+  align-items: stretch;
+}
+
+.detail-card h2 {
+  margin-bottom: 1rem;
+}
+
+.detail-card-emphasis {
+  background: linear-gradient(135deg, rgba(254, 1, 127, 0.12), rgba(29, 5, 125, 0.18));
+}
+
+html[data-theme="light"] .detail-card-emphasis {
+  background: linear-gradient(135deg, rgba(254, 1, 127, 0.08), rgba(29, 5, 125, 0.06));
 }
 
 .site-footer {
@@ -1334,7 +1679,7 @@ h3 {
   gap: 1rem;
   padding: 1.6rem;
   border-radius: var(--radius);
-  background: linear-gradient(135deg, rgba(29, 5, 125, 0.58), rgba(19, 12, 51, 0.94));
+  background: var(--footer-surface);
   border: 1px solid var(--line);
 }
 
@@ -1362,6 +1707,7 @@ h3 {
   .hero,
   .detail-hero,
   .footer-grid,
+  .detail-proof-grid,
   .detail-grid,
   .service-grid,
   .process-grid,
@@ -1395,6 +1741,11 @@ h3 {
     flex-direction: column;
     align-items: flex-start;
     padding-top: 0.5rem;
+  }
+
+  .theme-switch {
+    width: 100%;
+    max-width: 8rem;
   }
 
   .site-header[data-open="true"] .site-nav {
@@ -1445,7 +1796,9 @@ h3 {
 
   .button,
   .nav-link,
-  .lang-switch {
+  .lang-switch,
+  .theme-switch,
+  .theme-switch::after {
     transition: none;
   }
 }
@@ -1454,6 +1807,38 @@ h3 {
 
 def site_js() -> str:
     return """
+const themeKey = "b-tech-theme";
+const root = document.documentElement;
+const themeToggle = document.querySelector("[data-theme-toggle]");
+const themeMeta = document.querySelector("#theme-color-meta");
+
+const applyTheme = (theme) => {
+  const nextTheme = theme === "light" ? "light" : "dark";
+  root.setAttribute("data-theme", nextTheme);
+  if (themeMeta) {
+    themeMeta.setAttribute("content", nextTheme === "light" ? "#ffffff" : "#1D057D");
+  }
+  if (themeToggle) {
+    const nextLabel = nextTheme === "light"
+      ? themeToggle.getAttribute("data-label-dark")
+      : themeToggle.getAttribute("data-label-light");
+    themeToggle.setAttribute("aria-label", nextLabel || "Toggle theme");
+  }
+  try {
+    window.localStorage.setItem(themeKey, nextTheme);
+  } catch (error) {
+    // Ignore storage errors and keep the current session theme.
+  }
+};
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+    applyTheme(nextTheme);
+  });
+  applyTheme(root.getAttribute("data-theme") || "dark");
+}
+
 const header = document.querySelector(".site-header");
 const toggle = document.querySelector(".menu-toggle");
 
