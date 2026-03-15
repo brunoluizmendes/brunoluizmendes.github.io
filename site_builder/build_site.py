@@ -160,8 +160,6 @@ def header_markup(language: str, route: str) -> str:
     switch_to = language_href(language, route)
     switch_label = "PT" if language == "en" else "EN"
     current_label = "EN" if language == "en" else "PT"
-    theme_dark = t(language, "Dark", "Dark")
-    theme_light = t(language, "Light", "Light")
     theme_to_light = t(language, "Switch to light mode", "Mudar para modo claro")
     theme_to_dark = t(language, "Switch to dark mode", "Mudar para modo escuro")
     return f"""<header class="site-header" data-open="false">
@@ -186,8 +184,8 @@ def header_markup(language: str, route: str) -> str:
       data-label-light="{html.escape(theme_to_light)}"
       aria-label="{html.escape(theme_to_light)}"
     >
-      <span class="theme-option theme-option-dark">{html.escape(theme_dark)}</span>
-      <span class="theme-option theme-option-light">{html.escape(theme_light)}</span>
+      <span class="theme-option theme-option-dark" aria-hidden="true">{theme_moon_icon()}</span>
+      <span class="theme-option theme-option-light" aria-hidden="true">{theme_sun_icon()}</span>
     </button>
     <a href="{switch_to}" class="lang-switch" hreflang="{switch_label.lower()}">
       <span class="lang-current">{current_label}</span>
@@ -220,6 +218,26 @@ def footer_markup(language: str) -> str:
     <p>© 2026 {html.escape(SITE['name'])}</p>
   </div>
 </footer>"""
+
+
+def theme_sun_icon() -> str:
+    return """<svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="4.2"></circle>
+  <path d="M12 2.8v2.4"></path>
+  <path d="M12 18.8v2.4"></path>
+  <path d="M2.8 12h2.4"></path>
+  <path d="M18.8 12h2.4"></path>
+  <path d="m5.5 5.5 1.7 1.7"></path>
+  <path d="m16.8 16.8 1.7 1.7"></path>
+  <path d="m5.5 18.5 1.7-1.7"></path>
+  <path d="m16.8 7.2 1.7-1.7"></path>
+</svg>"""
+
+
+def theme_moon_icon() -> str:
+    return """<svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20.2 14.3A8.7 8.7 0 1 1 9.7 3.8a7.2 7.2 0 0 0 10.5 10.5z"></path>
+</svg>"""
 
 
 def project_card(language: str, project: dict, detailed: bool = False, compact: bool = False) -> str:
@@ -1016,7 +1034,7 @@ main,
   display: inline-grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
-  width: 6.8rem;
+  width: 5.4rem;
   padding: 0.24rem;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -1045,16 +1063,20 @@ html[data-theme="light"] .theme-switch::after {
   position: relative;
   z-index: 1;
   display: inline-flex;
+  align-items: center;
   justify-content: center;
-  padding: 0.32rem 0.2rem;
-  font-size: 0.78rem;
-  font-weight: 600;
+  padding: 0.34rem 0.2rem;
   color: var(--theme-switch-text);
 }
 
 html[data-theme="dark"] .theme-option-dark,
 html[data-theme="light"] .theme-option-light {
   color: var(--text);
+}
+
+.theme-icon {
+  width: 1rem;
+  height: 1rem;
 }
 
 .lang-current {
