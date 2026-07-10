@@ -171,11 +171,12 @@ def header_markup(language: str, route: str) -> str:
     </span>
   </a>
   <button class="menu-toggle" type="button" aria-label="{html.escape(t(language, 'Toggle navigation', 'Abrir navegacao'))}">
-    <span></span><span></span><span></span>
+    <span class="menu-toggle-icon menu-toggle-open" aria-hidden="true">{icon('menu')}</span>
+    <span class="menu-toggle-icon menu-toggle-close" aria-hidden="true">{icon('close')}</span>
   </button>
   <nav class="site-nav">
     {nav}
-    <a href="{SITE['upwork_url']}" class="nav-link nav-link-cta" target="_blank" rel="noreferrer">Upwork</a>
+    <a href="{SITE['calendly_url']}" class="button button-primary button-compact" target="_blank" rel="noreferrer">{html.escape(t(language, 'Book a call', 'Agendar conversa'))}</a>
     <button
       class="theme-switch"
       type="button"
@@ -196,18 +197,25 @@ def header_markup(language: str, route: str) -> str:
 
 
 def footer_markup(language: str) -> str:
-    primary_label = t(language, "Start on Upwork", "Comecar no Upwork")
+    primary_label = t(language, "Book a call", "Agendar uma conversa")
     secondary_label = t(language, "Connect on LinkedIn", "Conectar no LinkedIn")
+    closing_en = "Have a system in mind?"
+    closing_pt = "Tem um sistema em mente?"
+    next_step_en = "Book a 20-minute call to walk through the problem — no deck, no obligation."
+    next_step_pt = "Agende uma call de 20 minutos para conversar sobre o problema — sem apresentacao, sem compromisso."
     return f"""<footer class="site-footer" id="contact">
+  {svg_blob(BLOB_FOOTER_PATH, "blobFooter", "footer-blob")}
+  <div class="footer-halftone halftone" aria-hidden="true"></div>
   <div class="footer-grid">
     <div>
-      <p class="eyebrow">{html.escape(SITE['name'])}</p>
-      <h2>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</h2>
+      <p class="eyebrow">{html.escape(t(language, 'Contact', 'Contato'))}</p>
+      <h2>{html.escape(t(language, closing_en, closing_pt))}</h2>
       <p class="footer-copy">{html.escape(t(language, SITE['about_en'], SITE['about_pt']))}</p>
+      <p class="footer-next-step">{html.escape(t(language, next_step_en, next_step_pt))}</p>
     </div>
     <div class="footer-actions">
-      <a href="{SITE['upwork_url']}" class="button button-primary" target="_blank" rel="noreferrer">{html.escape(primary_label)}</a>
-      <a href="{SITE['linkedin_url']}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}</a>
+      <a href="{SITE['calendly_url']}" class="button button-primary" target="_blank" rel="noreferrer">{html.escape(primary_label)}{icon('arrow-up-right', 'icon icon-inline')}</a>
+      <a href="{SITE['linkedin_url']}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}{icon('arrow-up-right', 'icon icon-inline')}</a>
     </div>
   </div>
   <div class="footer-meta">
@@ -240,6 +248,61 @@ def theme_moon_icon() -> str:
 </svg>"""
 
 
+ICONS: dict[str, str] = {
+    "menu": '<line x1="4" x2="20" y1="7" y2="7"></line><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="17" y2="17"></line>',
+    "close": '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>',
+    "arrow-right": '<path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>',
+    "arrow-up-right": '<path d="M7 7h10v10"></path><path d="M7 17 17 7"></path>',
+    "external": '<path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>',
+    "database": '<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14a9 3 0 0 0 18 0V5"></path><path d="M3 12a9 3 0 0 0 18 0"></path>',
+    "target": '<circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle>',
+    "wallet": '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>',
+    "bot": '<path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path>',
+    "search": '<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>',
+    "terminal": '<path d="m4 17 6-6-6-6"></path><path d="M12 19h8"></path>',
+    "shield-check": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path>',
+    "package-check": '<path d="m16 16 2 2 4-4"></path><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l1.5-.87"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path>',
+    "check": '<path d="M20 6 9 17l-5-5"></path>',
+    "sparkle": '<path d="m12 3-1.9 4.9L5 9.8l4.9 1.9L12 17l1.9-5.1L19 9.9l-5.1-1.9Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path>',
+}
+
+
+def icon(name: str, css_class: str = "icon") -> str:
+    body = ICONS[name]
+    return (
+        f'<svg class="{css_class}" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        f'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{body}</svg>'
+    )
+
+
+BLOB_HERO_PATH = (
+    "M320,58 C428,40 552,98 588,202 C624,306 598,428 512,494 "
+    "C426,560 288,566 190,502 C92,438 54,318 96,214 C138,110 212,76 320,58 Z"
+)
+BLOB_FOOTER_PATH = (
+    "M300,44 C398,30 472,120 452,222 C432,324 494,428 410,486 "
+    "C326,544 208,522 148,438 C88,354 74,232 138,146 C202,60 202,58 300,44 Z"
+)
+
+
+def svg_blob(path: str, gradient_id: str, css_class: str) -> str:
+    return f"""<svg class="{css_class}" viewBox="0 0 640 640" aria-hidden="true">
+  <defs>
+    <linearGradient id="{gradient_id}" x1="10%" y1="0%" x2="95%" y2="100%">
+      <stop offset="0%" stop-color="#1A1440"/>
+      <stop offset="55%" stop-color="#2E2B7A"/>
+      <stop offset="100%" stop-color="#4F62E3"/>
+    </linearGradient>
+    <radialGradient id="{gradient_id}-hl" cx="32%" cy="26%" r="45%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path d="{path}" fill="url(#{gradient_id})"/>
+  <path d="{path}" fill="url(#{gradient_id}-hl)" style="mix-blend-mode: screen"/>
+</svg>"""
+
+
 def project_card(language: str, project: dict, detailed: bool = False, compact: bool = False) -> str:
     detail_href = f"{route_prefix(language)}/projects/{project['slug']}/"
     repo_href = repo_url(project["repo"])
@@ -262,83 +325,45 @@ def project_card(language: str, project: dict, detailed: bool = False, compact: 
   <p class="project-summary">{summary}</p>
   {stack_markup}
   <div class="project-links">
-    <a href="{detail_href}" class="inline-link">{html.escape(t(language, 'View case', 'Ver case'))}</a>
-    <a href="{repo_href}" class="inline-link" target="_blank" rel="noreferrer">GitHub</a>
+    <a href="{detail_href}" class="inline-link">{html.escape(t(language, 'View case', 'Ver case'))}{icon('arrow-right', 'icon icon-inline')}</a>
+    <a href="{repo_href}" class="inline-link" target="_blank" rel="noreferrer">GitHub{icon('external', 'icon icon-inline')}</a>
   </div>
 </article>"""
 
 
-def hero_carousel_markup(language: str) -> str:
-    slides = [
-        {
-            "image": "/assets/slide-lakehouse.svg",
-            "alt_en": "Warehouse and dbt architecture visual",
-            "alt_pt": "Visual de arquitetura de warehouse e dbt",
-            "title_en": "Warehouse + dbt delivery",
-            "title_pt": "Entrega de warehouse + dbt",
-            "text_en": "Layered models, cost-aware design, orchestration, and clean handoff.",
-            "text_pt": "Modelagem em camadas, custo controlado, orquestracao e handoff limpo.",
-        },
-        {
-            "image": "/assets/slide-observability.svg",
-            "alt_en": "Monitoring and operational observability visual",
-            "alt_pt": "Visual de monitoramento e observabilidade operacional",
-            "title_en": "Monitoring that operators can use",
-            "title_pt": "Monitoramento que a operacao usa",
-            "text_en": "Run logs, event logs, retries, dead-letter flows, and replay-safe pipelines.",
-            "text_pt": "Run logs, event logs, retries, dead-letter e pipelines seguros para replay.",
-        },
-        {
-            "image": "/assets/slide-revenue-automation.svg",
-            "alt_en": "Marketing and CRM automation visual",
-            "alt_pt": "Visual de automacao de marketing e CRM",
-            "title_en": "Revenue and CRM automation",
-            "title_pt": "Automacao de receita e CRM",
-            "text_en": "Attribution, lead routing, CRM syncs, and AI-assisted workflow automation.",
-            "text_pt": "Atribuicao, roteamento de leads, sync com CRM e automacao com AI.",
-        },
+def status_panel_markup(language: str) -> str:
+    guarantees = [
+        t(language, "No silent pipeline breaks", "Sem quebra silenciosa de pipeline"),
+        t(language, "No rework from duplicate data", "Sem retrabalho por dado duplicado"),
+        t(language, "Alerts before the incident, not after", "Alerta antes do incidente, nao depois"),
+        t(language, "Handoff without an emergency call", "Handoff sem call de emergencia"),
     ]
-    cards = []
-    dots = []
-    for index, slide in enumerate(slides):
-        active = " is-active" if index == 0 else ""
-        cards.append(
-            f"""<article class="carousel-slide{active}" data-carousel-slide>
-  <img src="{slide['image']}" alt="{html.escape(t(language, slide['alt_en'], slide['alt_pt']))}" class="carousel-image">
-  <div class="carousel-caption">
-    <strong>{html.escape(t(language, slide['title_en'], slide['title_pt']))}</strong>
-    <span>{html.escape(t(language, slide['text_en'], slide['text_pt']))}</span>
+    rows = "".join(
+        f"""<li>
+  <span class="status-job">{html.escape(item)}</span>
+  <span class="status-ok">{icon('check', 'icon icon-sm')}</span>
+</li>"""
+        for item in guarantees
+    )
+    return f"""<div class="status-card" data-reveal>
+  <div class="status-card-head">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span>{html.escape(t(language, 'What this avoids', 'O que isso evita'))}</span>
   </div>
-</article>"""
-        )
-        dots.append(
-            f'<button class="carousel-dot{active}" type="button" aria-label="{html.escape(t(language, slide["title_en"], slide["title_pt"]))}" data-carousel-dot="{index}"></button>'
-        )
-    return f"""<div class="brand-stage" data-carousel>
-  <div class="brand-orb orb-primary"></div>
-  <div class="brand-orb orb-secondary"></div>
-  <div class="brand-chip">
-    <img src="/assets/brand-mark.svg" alt="{html.escape(SITE['logo_alt'])}" class="brand-chip-logo">
-    <span>{html.escape(SITE['name'])}</span>
-  </div>
-  <div class="carousel-shell">
-    {''.join(cards)}
-  </div>
-  <div class="carousel-controls">{''.join(dots)}</div>
+  <ul class="status-list">{rows}</ul>
 </div>"""
 
 
 def hero_markup(language: str) -> str:
     actions = []
-    primary_label = t(language, "Start on Upwork", "Comecar no Upwork")
+    primary_label = t(language, "Book a call", "Agendar uma conversa")
     secondary_label = t(language, "Connect on LinkedIn", "Conectar no LinkedIn")
     actions.append(
-        f'<a href="{cta_url()}" class="button button-primary" target="_blank" rel="noreferrer">{html.escape(primary_label)}</a>'
+        f'<a href="{cta_url()}" class="button button-primary" target="_blank" rel="noreferrer">{html.escape(primary_label)}{icon("arrow-up-right", "icon icon-inline")}</a>'
     )
     actions.append(
-        f'<a href="{SITE["linkedin_url"]}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}</a>'
+        f'<a href="{SITE["linkedin_url"]}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}{icon("arrow-up-right", "icon icon-inline")}</a>'
     )
-    proof = "".join(f"<span>{html.escape(item)}</span>" for item in SITE["proof_ribbon"])
     stats = "".join(
         f"""<div class="stat">
   <strong>{html.escape(item['value'])}</strong>
@@ -348,35 +373,37 @@ def hero_markup(language: str) -> str:
     )
     terminal_lines = (
         (
-            "$ pipeline stack",
+            "$ problem",
+            "pipeline breaks silently at 3am",
+            "$ what we fix",
+            "logs -- retries -- alerts before it's a fire",
+            "$ how",
             "python -- dbt -- warehouses -- automation",
-            "$ controls",
-            "logs -- monitoring -- retries -- dead-letter",
-            "$ buyer value",
-            "clean delivery -- lower ops risk -- faster handoff",
         )
         if language == "en"
         else (
-            "$ pipeline stack",
+            "$ problema",
+            "pipeline quebra silencioso as 3h",
+            "$ o que a gente resolve",
+            "logs -- retries -- alerta antes do incendio",
+            "$ como",
             "python -- dbt -- warehouses -- automacao",
-            "$ controles",
-            "logs -- monitoramento -- retries -- dead-letter",
-            "$ valor",
-            "entrega limpa -- menos risco operacional -- handoff rapido",
         )
     )
     return f"""<section class="hero">
+  {svg_blob(BLOB_HERO_PATH, "blobHero", "hero-blob")}
+  <div class="hero-halftone halftone" aria-hidden="true"></div>
+  <span class="scatter-ring hero-ring" aria-hidden="true"></span>
   <div class="hero-copy" data-reveal>
     <p class="eyebrow">{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</p>
     <h1>{html.escape(t(language, SITE['headline_en'], SITE['headline_pt']))}</h1>
     <p class="hero-text">{html.escape(t(language, SITE['subheadline_en'], SITE['subheadline_pt']))}</p>
     <p class="hero-location">{html.escape(t(language, SITE['location_en'], SITE['location_pt']))}</p>
     <div class="hero-actions">{''.join(actions)}</div>
-    <div class="proof-ribbon">{proof}</div>
   </div>
-  <div class="hero-visual" data-reveal>
-    {hero_carousel_markup(language)}
-    <div class="terminal-card">
+  <div class="hero-visual">
+    {status_panel_markup(language)}
+    <div class="terminal-card" data-reveal>
       <div class="terminal-head">
         <span></span><span></span><span></span>
       </div>
@@ -389,6 +416,7 @@ def hero_markup(language: str) -> str:
         <span>{html.escape(terminal_lines[5])}</span>
       </code>
     </div>
+    <span class="scatter-orb hero-orb" aria-hidden="true"></span>
   </div>
   <div class="hero-stats">{stats}</div>
 </section>"""
@@ -397,7 +425,7 @@ def hero_markup(language: str) -> str:
 def services_markup(language: str) -> str:
     cards = "".join(
         f"""<article class="service-card" data-reveal>
-  <p class="service-number">{item['eyebrow']}</p>
+  <span class="service-icon">{icon(item['icon'])}</span>
   <h3>{html.escape(t(language, item['title_en'], item['title_pt']))}</h3>
   <p>{html.escape(t(language, item['body_en'], item['body_pt']))}</p>
 </article>"""
@@ -405,8 +433,8 @@ def services_markup(language: str) -> str:
     )
     return f"""<section class="section section-services" id="services">
   <div class="section-heading">
-    <p class="eyebrow">{html.escape(t(language, 'What B Tecnologia builds', 'O que a B Tecnologia entrega'))}</p>
-    <h2>{html.escape(t(language, 'Systems built to stay in production', 'Sistemas feitos para ficar em producao'))}</h2>
+    <p class="eyebrow">{html.escape(t(language, 'Areas of work', 'Frentes de atuacao'))}</p>
+    <h2>{html.escape(t(language, 'Four problems, one engineer', 'Quatro frentes, um engenheiro'))}</h2>
   </div>
   <div class="service-grid">{cards}</div>
 </section>"""
@@ -414,15 +442,18 @@ def services_markup(language: str) -> str:
 
 def project_sections_markup(language: str) -> str:
     cards = "".join(project_card(language, project, compact=True) for project in featured_projects())
+    proof = "".join(f"<li>{html.escape(item)}</li>" for item in SITE["proof_ribbon"])
     return f"""<section class="section section-projects" id="projects">
   <div class="section-heading">
-    <p class="eyebrow">{html.escape(t(language, 'Selected work', 'Cases selecionados'))}</p>
-    <h2>{html.escape(t(language, 'Selected Projects', 'Projetos selecionados'))}</h2>
-    <p>{html.escape(t(language, 'A compact sample of systems built for data platforms, finance ops, marketing integrations, and automation workflows.', 'Uma selecao compacta de sistemas entregues para plataforma de dados, operacao financeira, integracoes de marketing e automacao.'))}</p>
+    <p class="eyebrow">{html.escape(t(language, 'Proof, not claims', 'Prova, nao promessa'))}</p>
+    <h2>{html.escape(t(language, 'Selected projects', 'Projetos selecionados'))}</h2>
+    <p>{html.escape(t(language, 'Six repositories that show the delivery pattern: clean schemas, replay-safe pipelines, and a handoff another engineer can pick up.', 'Seis repositorios que mostram o padrao de entrega: schemas limpos, pipelines seguros para replay e um handoff que outro engenheiro consegue assumir.'))}</p>
   </div>
   <div class="project-grid">{cards}</div>
+  <p class="eyebrow">{html.escape(t(language, 'Stack behind the projects above', 'Stack por tras dos projetos acima'))}</p>
+  <ul class="proof-ribbon">{proof}</ul>
   <div class="section-actions">
-    <a href="{route_prefix(language)}/projects/" class="button button-secondary">{html.escape(t(language, 'View all projects', 'Ver todos os projetos'))}</a>
+    <a href="{route_prefix(language)}/projects/" class="button button-secondary">{html.escape(t(language, 'View all projects', 'Ver todos os projetos'))}{icon('arrow-right', 'icon icon-inline')}</a>
   </div>
 </section>"""
 
@@ -430,6 +461,10 @@ def project_sections_markup(language: str) -> str:
 def process_markup(language: str) -> str:
     cards = "".join(
         f"""<article class="process-card" data-reveal>
+  <div class="process-card-head">
+    <span class="process-icon">{icon(item['icon'])}</span>
+    <span class="process-step">{item['step']}</span>
+  </div>
   <h3>{html.escape(t(language, item['title_en'], item['title_pt']))}</h3>
   <p>{html.escape(t(language, item['body_en'], item['body_pt']))}</p>
 </article>"""
@@ -437,9 +472,8 @@ def process_markup(language: str) -> str:
     )
     return f"""<section class="section section-process" id="process">
   <div class="section-heading">
-    <p class="eyebrow">{html.escape(t(language, 'How we work', 'Como trabalhamos'))}</p>
-    <h2>{html.escape(t(language, 'Senior execution, clean delivery', 'Execucao senior, entrega limpa'))}</h2>
-    <p>{html.escape(t(language, SITE['about_en'], SITE['about_pt']))}</p>
+    <p class="eyebrow">{html.escape(t(language, 'How an engagement runs', 'Como um projeto acontece'))}</p>
+    <h2>{html.escape(t(language, 'From first call to handoff', 'Da primeira call ao handoff'))}</h2>
   </div>
   <div class="process-grid">{cards}</div>
 </section>"""
@@ -565,7 +599,7 @@ def project_detail_markup(language: str, project: dict) -> str:
         {
             "title": t(language, "Operating posture", "Postura operacional"),
             "value": str(profile["posture"]),
-            "body": t(language, "Designed to look real in production, not just present well in a portfolio.", "Pensado para parecer uma entrega real de producao, nao apenas um portfolio bonito."),
+            "body": t(language, "Built with the same logging, retries, and validation you would expect from a workload running in production.", "Construido com os mesmos logs, retries e validacoes que voce esperaria de uma carga real de producao."),
         },
     )
     proof_markup = "".join(
@@ -586,9 +620,8 @@ def project_detail_markup(language: str, project: dict) -> str:
       <h1>{html.escape(project['title'])}</h1>
       <p class="detail-tagline">{html.escape(t(language, project['tagline_en'], project['tagline_pt']))}</p>
       <div class="hero-actions">
-        <a href="{repo_href}" class="button button-primary" target="_blank" rel="noreferrer">GitHub</a>
-        <a href="{SITE['upwork_url']}" class="button button-secondary" target="_blank" rel="noreferrer">Upwork</a>
-        <a href="{SITE['linkedin_url']}" class="button button-ghost" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="{repo_href}" class="button button-primary" target="_blank" rel="noreferrer">{icon('external', 'icon icon-inline-lead')}GitHub</a>
+        <a href="{SITE['calendly_url']}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(t(language, 'Book a call', 'Agendar conversa'))}{icon('arrow-up-right', 'icon icon-inline')}</a>
       </div>
       <ul class="detail-stack-preview">{headline_stack}</ul>
     </div>
@@ -628,7 +661,7 @@ def project_detail_markup(language: str, project: dict) -> str:
   <section class="section detail-related">
     <div class="section-heading">
       <p class="eyebrow">{html.escape(t(language, 'More in this delivery lane', 'Mais nesta frente de entrega'))}</p>
-      <h2>{html.escape(t(language, 'Related portfolio work', 'Trabalhos relacionados do portfolio'))}</h2>
+      <h2>{html.escape(t(language, 'Related work', 'Trabalhos relacionados'))}</h2>
     </div>
     <div class="project-grid">{related}</div>
   </section>
@@ -639,7 +672,7 @@ def projects_index_markup(language: str) -> str:
     cards = "".join(project_card(language, project, detailed=True) for project in PROJECTS)
     return f"""<main class="projects-index">
   <section class="section-heading section-heading-page" data-reveal>
-    <p class="eyebrow">{html.escape(t(language, 'Project portfolio', 'Portfolio de projetos'))}</p>
+    <p class="eyebrow">{html.escape(t(language, 'Project archive', 'Arquivo de projetos'))}</p>
     <h1>{html.escape(t(language, 'Systems, integrations, and automation builds', 'Sistemas, integracoes e automacoes entregues'))}</h1>
     <p>{html.escape(t(language, 'Each project links to the GitHub repository and a short case page with delivery context.', 'Cada projeto aponta para o repositorio no GitHub e para uma pagina curta com contexto de entrega.'))}</p>
   </section>
@@ -669,7 +702,7 @@ def page_shell(language: str, route: str, body: str, title: str | None = None, d
 def svg_logo() -> str:
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
   <title id="title">B Tecnologia brand mark</title>
-  <desc id="desc">A stylized magenta B with an indigo dot.</desc>
+  <desc id="desc">A stylized indigo-blue B with a deep navy dot.</desc>
   <rect width="512" height="512" rx="128" fill="none"/>
   <circle cx="150" cy="365" r="40" fill="{SITE['palette']['secondary']}"/>
   <text x="165" y="350" font-size="300" font-weight="700" font-family="Space Grotesk, Arial, sans-serif" fill="{SITE['palette']['primary']}">B</text>
@@ -680,8 +713,8 @@ def svg_og_card() -> str:
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#09051d"/>
-      <stop offset="100%" stop-color="#1D057D"/>
+      <stop offset="0%" stop-color="#0a0a10"/>
+      <stop offset="100%" stop-color="{SITE['palette']['secondary']}"/>
     </linearGradient>
     <radialGradient id="glow" cx="70%" cy="20%" r="80%">
       <stop offset="0%" stop-color="{SITE['palette']['primary']}" stop-opacity="0.42"/>
@@ -698,182 +731,108 @@ def svg_og_card() -> str:
 </svg>"""
 
 
-def svg_slide_lakehouse() -> str:
-    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#130c33"/>
-      <stop offset="100%" stop-color="#23105a"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="760" rx="40" fill="url(#bg)"/>
-  <rect x="70" y="72" width="1060" height="96" rx="24" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.10)"/>
-  <rect x="96" y="104" width="210" height="20" rx="10" fill="#FE017F"/>
-  <rect x="96" y="138" width="330" height="12" rx="6" fill="rgba(255,255,255,0.22)"/>
-  <rect x="70" y="220" width="320" height="430" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)"/>
-  <rect x="438" y="220" width="320" height="430" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)"/>
-  <rect x="806" y="220" width="324" height="430" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)"/>
-  <text x="108" y="274" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">raw</text>
-  <text x="476" y="274" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">stage</text>
-  <text x="844" y="274" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">analytics</text>
-  <rect x="108" y="312" width="244" height="52" rx="16" fill="#1D057D"/>
-  <rect x="108" y="388" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
-  <rect x="108" y="464" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
-  <rect x="476" y="312" width="244" height="52" rx="16" fill="#FE017F"/>
-  <rect x="476" y="388" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
-  <rect x="476" y="464" width="244" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
-  <rect x="844" y="312" width="248" height="168" rx="20" fill="rgba(255,255,255,0.08)"/>
-  <rect x="844" y="508" width="248" height="52" rx="16" fill="rgba(255,255,255,0.08)"/>
-  <circle cx="390" cy="338" r="12" fill="#FE017F"/>
-  <circle cx="760" cy="338" r="12" fill="#FE017F"/>
-  <path d="M364 338h52" stroke="#FE017F" stroke-width="6" stroke-linecap="round"/>
-  <path d="M734 338h52" stroke="#FE017F" stroke-width="6" stroke-linecap="round"/>
-</svg>"""
-
-
-def svg_slide_observability() -> str:
-    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
-  <defs>
-    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#100827"/>
-      <stop offset="100%" stop-color="#1D057D"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="760" rx="40" fill="url(#bg2)"/>
-  <rect x="80" y="76" width="460" height="260" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
-  <rect x="80" y="378" width="460" height="302" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
-  <rect x="582" y="76" width="538" height="604" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
-  <text x="118" y="134" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">pipeline_runs</text>
-  <text x="118" y="436" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">pipeline_events</text>
-  <text x="620" y="134" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">sla + alerting</text>
-  <rect x="118" y="168" width="386" height="24" rx="12" fill="rgba(255,255,255,0.10)"/>
-  <rect x="118" y="214" width="300" height="24" rx="12" fill="#73F3A1"/>
-  <rect x="118" y="260" width="210" height="24" rx="12" fill="#FFD166"/>
-  <rect x="118" y="506" width="386" height="20" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="118" y="548" width="386" height="20" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="118" y="590" width="240" height="20" rx="10" fill="#FE017F"/>
-  <path d="M620 532c40-90 98-108 148-158 56-56 88-114 150-214" stroke="#FE017F" stroke-width="8" fill="none" stroke-linecap="round"/>
-  <circle cx="620" cy="532" r="16" fill="#FE017F"/>
-  <circle cx="768" cy="374" r="16" fill="#FE017F"/>
-  <circle cx="918" cy="246" r="16" fill="#FE017F"/>
-  <circle cx="1068" cy="160" r="16" fill="#73F3A1"/>
-  <rect x="620" y="566" width="438" height="54" rx="18" fill="rgba(255,255,255,0.08)"/>
-</svg>"""
-
-
-def svg_slide_revenue_automation() -> str:
-    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
-  <defs>
-    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#120b33"/>
-      <stop offset="100%" stop-color="#20094f"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="760" rx="40" fill="url(#bg3)"/>
-  <rect x="88" y="94" width="240" height="150" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
-  <rect x="480" y="94" width="240" height="150" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
-  <rect x="872" y="94" width="240" height="150" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
-  <text x="132" y="160" fill="#FFFFFF" font-size="30" font-family="IBM Plex Sans, Arial, sans-serif">ads</text>
-  <text x="528" y="160" fill="#FFFFFF" font-size="30" font-family="IBM Plex Sans, Arial, sans-serif">forms</text>
-  <text x="914" y="160" fill="#FFFFFF" font-size="30" font-family="IBM Plex Sans, Arial, sans-serif">crm</text>
-  <path d="M328 170h116" stroke="#FE017F" stroke-width="8" stroke-linecap="round"/>
-  <path d="M720 170h116" stroke="#FE017F" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="452" cy="170" r="15" fill="#FE017F"/>
-  <circle cx="844" cy="170" r="15" fill="#FE017F"/>
-  <rect x="88" y="320" width="1024" height="352" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.10)"/>
-  <text x="132" y="382" fill="#FFFFFF" font-size="28" font-family="IBM Plex Sans, Arial, sans-serif">routing + enrichment + sync</text>
-  <rect x="132" y="426" width="168" height="110" rx="20" fill="#1D057D"/>
-  <rect x="332" y="426" width="168" height="110" rx="20" fill="#FE017F"/>
-  <rect x="532" y="426" width="168" height="110" rx="20" fill="rgba(255,255,255,0.10)"/>
-  <rect x="732" y="426" width="168" height="110" rx="20" fill="rgba(255,255,255,0.10)"/>
-  <rect x="932" y="426" width="136" height="110" rx="20" fill="#73F3A1"/>
-  <rect x="132" y="574" width="936" height="26" rx="13" fill="rgba(255,255,255,0.08)"/>
-</svg>"""
-
 
 def site_css() -> str:
     return """
 :root {
   color-scheme: dark;
-  --bg: #09051d;
-  --bg-elevated: #120b33;
-  --bg-soft: rgba(231, 231, 231, 0.08);
-  --card: rgba(19, 12, 51, 0.78);
-  --card-strong: rgba(25, 16, 61, 0.94);
-  --text: #f5efff;
-  --text-soft: rgba(245, 239, 255, 0.76);
-  --text-muted: rgba(245, 239, 255, 0.58);
-  --line: rgba(231, 231, 231, 0.12);
-  --primary: #fe017f;
-  --primary-soft: rgba(254, 1, 127, 0.18);
-  --secondary: #1d057d;
-  --neutral: #c3c2c3;
-  --shadow: 0 24px 64px rgba(0, 0, 0, 0.32);
-  --radius: 28px;
-  --radius-sm: 18px;
+
+  /* surfaces */
+  --bg: #0a0a10;
+  --card: rgba(255, 255, 255, 0.045);
+  --card-strong: rgba(255, 255, 255, 0.075);
+  --border: rgba(255, 255, 255, 0.11);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  /* text */
+  --text: #f3f3f6;
+  --text-soft: rgba(243, 243, 246, 0.74);
+  --text-muted: rgba(243, 243, 246, 0.52);
+
+  /* accent: single, disciplined use only */
+  --accent: #4f62e3;
+  --accent-strong: #7b8af0;
+  --accent-soft: rgba(79, 98, 227, 0.14);
+  --accent-border: rgba(79, 98, 227, 0.35);
+  --on-accent: #ffffff;
+  --positive: #35d488;
+
+  --shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 8px 22px rgba(0, 0, 0, 0.24);
+
+  /* radius */
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+
+  /* spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: clamp(2rem, 3.4vw, 2.5rem);
+  --text-4xl: clamp(2.5rem, 4.2vw, 3.25rem);
+  --text-5xl: clamp(2.75rem, 5.6vw, 4.25rem);
+
   --content: 1160px;
-  --theme-color: #1D057D;
-  --header-surface: rgba(9, 5, 29, 0.72);
-  --grid-line: rgba(255, 255, 255, 0.045);
-  --gradient-a: rgba(254, 1, 127, 0.9);
-  --gradient-b: rgba(29, 5, 125, 1);
-  --stage-base: rgba(255, 255, 255, 0.05);
-  --stage-glow-a: rgba(254, 1, 127, 0.22);
-  --stage-glow-b: rgba(29, 5, 125, 0.35);
-  --brand-chip-bg: rgba(9, 5, 29, 0.7);
-  --brand-chip-line: rgba(255, 255, 255, 0.14);
-  --carousel-shell-bg: rgba(7, 4, 24, 0.48);
-  --carousel-shell-line: rgba(255, 255, 255, 0.14);
-  --carousel-caption-bg: rgba(9, 5, 29, 0.72);
-  --carousel-caption-line: rgba(255, 255, 255, 0.12);
-  --button-secondary-bg: rgba(255, 255, 255, 0.08);
-  --button-secondary-line: rgba(255, 255, 255, 0.14);
-  --button-ghost-color: rgba(245, 239, 255, 0.76);
-  --pill-surface: rgba(255, 255, 255, 0.04);
-  --terminal-code: #ffcaeb;
-  --stat-surface: rgba(255, 255, 255, 0.05);
-  --footer-surface: linear-gradient(135deg, rgba(29, 5, 125, 0.58), rgba(19, 12, 51, 0.94));
+  --theme-color: #0a0a10;
+  --header-surface: rgba(10, 10, 16, 0.78);
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --terminal-code: #b9c3ff;
+  --focus-ring: rgba(79, 98, 227, 0.55);
+  --button-secondary-bg: rgba(255, 255, 255, 0.07);
+  --button-ghost-color: rgba(243, 243, 246, 0.78);
   --theme-switch-bg: rgba(255, 255, 255, 0.06);
-  --theme-switch-thumb: rgba(255, 255, 255, 0.14);
-  --theme-switch-text: rgba(245, 239, 255, 0.64);
+  --theme-switch-thumb: rgba(255, 255, 255, 0.16);
+  --theme-switch-text: rgba(243, 243, 246, 0.64);
 }
 
 html[data-theme="light"] {
   color-scheme: light;
   --bg: #ffffff;
-  --bg-elevated: #ffffff;
-  --bg-soft: rgba(17, 24, 39, 0.03);
-  --card: rgba(255, 255, 255, 0.94);
-  --card-strong: rgba(255, 255, 255, 0.98);
-  --text: #15122b;
-  --text-soft: rgba(21, 18, 43, 0.78);
-  --text-muted: rgba(21, 18, 43, 0.56);
-  --line: rgba(21, 18, 43, 0.1);
-  --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  --card: rgba(15, 15, 20, 0.025);
+  --card-strong: rgba(15, 15, 20, 0.045);
+  --border: rgba(15, 15, 20, 0.11);
+  --border-strong: rgba(15, 15, 20, 0.2);
+  --text: #111116;
+  --text-soft: rgba(17, 17, 22, 0.72);
+  --text-muted: rgba(17, 17, 22, 0.5);
+  --accent: #3548c9;
+  --accent-strong: #4f62e3;
+  --accent-soft: rgba(53, 72, 201, 0.08);
+  --accent-border: rgba(53, 72, 201, 0.25);
+  --on-accent: #ffffff;
+  --positive: #16a35f;
+  --shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.06);
   --theme-color: #ffffff;
-  --header-surface: rgba(255, 255, 255, 0.94);
-  --grid-line: rgba(21, 18, 43, 0.05);
-  --gradient-a: rgba(254, 1, 127, 0.14);
-  --gradient-b: rgba(29, 5, 125, 0.08);
-  --stage-base: rgba(255, 255, 255, 0.88);
-  --stage-glow-a: rgba(254, 1, 127, 0.08);
-  --stage-glow-b: rgba(29, 5, 125, 0.06);
-  --brand-chip-bg: rgba(255, 255, 255, 0.94);
-  --brand-chip-line: rgba(21, 18, 43, 0.08);
-  --carousel-shell-bg: rgba(255, 255, 255, 0.94);
-  --carousel-shell-line: rgba(21, 18, 43, 0.08);
-  --carousel-caption-bg: rgba(255, 255, 255, 0.94);
-  --carousel-caption-line: rgba(21, 18, 43, 0.1);
-  --button-secondary-bg: rgba(21, 18, 43, 0.04);
-  --button-secondary-line: rgba(21, 18, 43, 0.1);
-  --button-ghost-color: #1d057d;
-  --pill-surface: rgba(21, 18, 43, 0.04);
-  --terminal-code: #8f135d;
-  --stat-surface: rgba(255, 255, 255, 0.96);
-  --footer-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 247, 250, 1));
-  --theme-switch-bg: rgba(21, 18, 43, 0.04);
-  --theme-switch-thumb: rgba(21, 18, 43, 0.08);
-  --theme-switch-text: rgba(21, 18, 43, 0.58);
+  --header-surface: rgba(255, 255, 255, 0.86);
+  --grid-line: rgba(15, 15, 20, 0.045);
+  --terminal-code: #2c3aa0;
+  --focus-ring: rgba(53, 72, 201, 0.45);
+  --button-secondary-bg: rgba(15, 15, 20, 0.04);
+  --button-ghost-color: #3548c9;
+  --theme-switch-bg: rgba(15, 15, 20, 0.04);
+  --theme-switch-thumb: rgba(15, 15, 20, 0.09);
+  --theme-switch-text: rgba(17, 17, 22, 0.58);
 }
 
 *,
@@ -892,6 +851,7 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 a {
@@ -902,6 +862,36 @@ a {
 img {
   max-width: 100%;
   display: block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex-shrink: 0;
+}
+
+.icon-inline {
+  width: 0.95em;
+  height: 0.95em;
+  margin-left: 0.4em;
+}
+
+.icon-inline-lead {
+  width: 0.95em;
+  height: 0.95em;
+  margin-right: 0.4em;
+}
+
+.icon-sm {
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: 0.35em;
 }
 
 .page-background {
@@ -915,24 +905,25 @@ img {
 .gradient {
   position: absolute;
   border-radius: 999px;
-  filter: blur(60px);
-  opacity: 0.55;
+  filter: blur(90px);
+  opacity: 0.5;
 }
 
 .gradient-a {
-  width: 36rem;
-  height: 36rem;
-  top: -10rem;
-  right: -8rem;
-  background: radial-gradient(circle, var(--gradient-a), rgba(254, 1, 127, 0));
+  width: 34rem;
+  height: 34rem;
+  top: -12rem;
+  right: -10rem;
+  background: radial-gradient(circle, var(--accent-soft), rgba(79, 98, 227, 0));
 }
 
 .gradient-b {
-  width: 28rem;
-  height: 28rem;
-  left: -8rem;
-  top: 24rem;
-  background: radial-gradient(circle, var(--gradient-b), rgba(29, 5, 125, 0));
+  width: 26rem;
+  height: 26rem;
+  left: -10rem;
+  top: 30rem;
+  background: radial-gradient(circle, var(--border), transparent);
+  opacity: 0.3;
 }
 
 .grid-overlay {
@@ -960,52 +951,59 @@ main,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
   background: var(--header-surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   backdrop-filter: blur(16px);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  border-radius: var(--radius-full);
 }
 
 .brand-mark {
-  width: 3rem;
-  height: 3rem;
+  width: 2.6rem;
+  height: 2.6rem;
 }
 
 .brand-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .brand-text strong {
   font-family: "Space Grotesk", sans-serif;
-  font-size: 0.98rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .brand-text span {
   color: var(--text-muted);
-  font-size: 0.84rem;
+  font-size: var(--text-xs);
 }
 
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .nav-link,
 .lang-switch,
 .theme-switch {
   color: var(--text-soft);
-  font-size: 0.92rem;
+  font-size: var(--text-sm);
+}
+
+.nav-link {
+  padding: 0.3rem 0.1rem;
+  transition: color 160ms ease;
 }
 
 .nav-link:hover,
@@ -1016,17 +1014,24 @@ main,
   color: var(--text);
 }
 
-.nav-link-cta {
-  color: var(--primary);
+.button-compact {
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  font-size: var(--text-xs);
 }
 
 .lang-switch {
   display: inline-flex;
-  gap: 0.45rem;
+  gap: 0.4rem;
   align-items: center;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.lang-switch:hover {
+  border-color: var(--border-strong);
 }
 
 .theme-switch {
@@ -1034,10 +1039,10 @@ main,
   display: inline-grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
-  width: 5.4rem;
-  padding: 0.24rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  width: 5rem;
+  padding: 0.22rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
   background: var(--theme-switch-bg);
   cursor: pointer;
   overflow: hidden;
@@ -1046,11 +1051,11 @@ main,
 .theme-switch::after {
   content: "";
   position: absolute;
-  top: 0.24rem;
-  left: 0.24rem;
-  width: calc(50% - 0.24rem);
-  height: calc(100% - 0.48rem);
-  border-radius: 999px;
+  top: 0.22rem;
+  left: 0.22rem;
+  width: calc(50% - 0.22rem);
+  height: calc(100% - 0.44rem);
+  border-radius: var(--radius-full);
   background: var(--theme-switch-thumb);
   transition: transform 180ms ease;
 }
@@ -1065,7 +1070,7 @@ html[data-theme="light"] .theme-switch::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.34rem 0.2rem;
+  padding: 0.32rem 0.2rem;
   color: var(--theme-switch-text);
 }
 
@@ -1085,19 +1090,34 @@ html[data-theme="light"] .theme-option-light {
 
 .menu-toggle {
   display: none;
-  border: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
   background: transparent;
+  border-radius: var(--radius-full);
   padding: 0;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  color: var(--text);
+  transition: border-color 160ms ease;
 }
 
-.menu-toggle span {
+.menu-toggle-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  display: none;
+}
+
+.menu-toggle-open {
   display: block;
-  width: 1.5rem;
-  height: 2px;
-  margin: 0.28rem auto;
-  background: var(--text);
+}
+
+.site-header[data-open="true"] .menu-toggle-open {
+  display: none;
+}
+
+.site-header[data-open="true"] .menu-toggle-close {
+  display: block;
 }
 
 .hero,
@@ -1109,48 +1129,142 @@ html[data-theme="light"] .theme-option-light {
   z-index: 1;
 }
 
+.hero,
+.site-footer {
+  overflow: hidden;
+}
+
 .hero {
-  padding: 3rem 0 1rem;
+  padding: var(--space-12) 0 var(--space-4);
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 2rem;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: var(--space-10);
   align-items: start;
 }
 
+.hero-blob,
+.footer-blob {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hero-blob {
+  top: -5rem;
+  right: -7rem;
+  width: 34rem;
+  height: 34rem;
+  filter: blur(4px);
+  opacity: 0.6;
+}
+
+.footer-blob {
+  bottom: -8rem;
+  left: -9rem;
+  width: 26rem;
+  height: 26rem;
+  filter: blur(4px);
+  opacity: 0.45;
+}
+
+html[data-theme="light"] .hero-blob,
+html[data-theme="light"] .footer-blob {
+  opacity: 0.14;
+}
+
+.halftone {
+  position: absolute;
+  width: 20rem;
+  height: 20rem;
+  background-image: radial-gradient(circle, var(--accent) 1.4px, transparent 1.6px);
+  background-size: 15px 15px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hero-halftone {
+  bottom: -3rem;
+  left: -3rem;
+  -webkit-mask-image: radial-gradient(circle at 0% 100%, rgba(0, 0, 0, 0.9), transparent 70%);
+  mask-image: radial-gradient(circle at 0% 100%, rgba(0, 0, 0, 0.9), transparent 70%);
+}
+
+.footer-halftone {
+  top: -3rem;
+  right: -3rem;
+  -webkit-mask-image: radial-gradient(circle at 100% 0%, rgba(0, 0, 0, 0.9), transparent 70%);
+  mask-image: radial-gradient(circle at 100% 0%, rgba(0, 0, 0, 0.9), transparent 70%);
+}
+
+html[data-theme="light"] .halftone {
+  opacity: 0.16;
+}
+
+.scatter-ring,
+.scatter-orb {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.scatter-ring {
+  border: 1px solid var(--border-strong);
+}
+
+.scatter-orb {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  opacity: 0.7;
+}
+
+.hero-ring {
+  top: 2.5rem;
+  left: 51%;
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+.hero-orb {
+  bottom: -0.6rem;
+  right: 2.2rem;
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
 .hero-copy {
-  padding-top: 2rem;
+  padding-top: var(--space-8);
 }
 
 .eyebrow {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--space-4);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.84rem;
+  font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--primary);
+  letter-spacing: 0.16em;
+  color: var(--accent);
 }
 
 h1,
 h2,
 h3 {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--space-4);
   font-family: "Space Grotesk", sans-serif;
   letter-spacing: -0.03em;
+  font-weight: 700;
 }
 
 h1 {
-  font-size: clamp(2.4rem, 4.8vw, 4.6rem);
-  line-height: 0.98;
-  max-width: 11ch;
+  font-size: var(--text-5xl);
+  line-height: 1;
+  max-width: 12ch;
 }
 
 h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1;
+  font-size: var(--text-4xl);
+  line-height: 1.05;
 }
 
 h3 {
-  font-size: 1.4rem;
+  font-size: var(--text-lg);
+  font-weight: 600;
 }
 
 .hero-text,
@@ -1162,13 +1276,16 @@ h3 {
 .detail-card p,
 .footer-copy {
   color: var(--text-soft);
-  line-height: 1.7;
+  font-size: var(--text-md);
+  line-height: 1.65;
 }
 
 .hero-location,
+.footer-next-step,
 .micro-note {
   color: var(--text-muted);
-  margin-top: 0.85rem;
+  font-size: var(--text-sm);
+  margin-top: var(--space-3);
 }
 
 .hero-actions,
@@ -1177,11 +1294,11 @@ h3 {
 .footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.85rem;
+  gap: var(--space-3);
 }
 
 .hero-actions {
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
 }
 
 .button {
@@ -1189,216 +1306,185 @@ h3 {
   align-items: center;
   justify-content: center;
   min-height: 3rem;
-  padding: 0 1.2rem;
-  border-radius: 999px;
+  padding: 0 1.3rem;
+  border-radius: var(--radius-full);
   border: 1px solid transparent;
   font-weight: 600;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
 }
 
-.button:hover {
-  transform: translateY(-1px);
+.button:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .button-primary {
-  background: linear-gradient(135deg, var(--primary), #ff3b98);
-  color: #fff;
-  box-shadow: 0 12px 32px rgba(254, 1, 127, 0.32);
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  color: var(--on-accent);
+  box-shadow: 0 10px 26px rgba(79, 98, 227, 0.28);
+}
+
+.button-primary:hover {
+  background: var(--accent-strong);
+  box-shadow: 0 12px 32px rgba(79, 98, 227, 0.38);
+  transform: translateY(-1px);
 }
 
 .button-secondary {
   background: var(--button-secondary-bg);
-  border-color: var(--button-secondary-line);
+  border-color: var(--border);
   color: var(--text);
 }
 
+.button-secondary:hover {
+  border-color: var(--border-strong);
+  background: var(--card-strong);
+  transform: translateY(-1px);
+}
+
 .button-ghost {
-  border-color: var(--line);
+  border-color: var(--border);
   color: var(--button-ghost-color);
 }
 
-.proof-ribbon {
-  margin-top: 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+.button-ghost:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
 }
 
-.proof-ribbon span,
+.proof-ribbon {
+  list-style: none;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.proof-ribbon li,
 .stack-list li,
 .detail-chip,
 .project-category {
   display: inline-flex;
   align-items: center;
-  padding: 0.45rem 0.78rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--pill-surface);
-  color: var(--text-soft);
-  font-size: 0.82rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
 }
 
 .hero-visual {
-  display: grid;
-  gap: 1rem;
-}
-
-.brand-stage {
   position: relative;
-  min-height: 32rem;
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  background:
-    radial-gradient(circle at 28% 25%, var(--stage-glow-a), transparent 46%),
-    radial-gradient(circle at 72% 76%, var(--stage-glow-b), transparent 40%),
-    var(--stage-base);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.brand-orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(6px);
-}
-
-.orb-primary {
-  width: 12rem;
-  height: 12rem;
-  top: -2rem;
-  right: -1rem;
-  background: rgba(254, 1, 127, 0.48);
-}
-
-.orb-secondary {
-  width: 10rem;
-  height: 10rem;
-  bottom: -2rem;
-  left: -1rem;
-  background: rgba(29, 5, 125, 0.82);
-}
-
-.brand-chip {
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.7rem 0.95rem;
-  border-radius: 999px;
-  background: var(--brand-chip-bg);
-  border: 1px solid var(--brand-chip-line);
-  backdrop-filter: blur(12px);
-}
-
-.brand-chip-logo {
-  width: 2rem;
-  height: 2rem;
-}
-
-.brand-chip span {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 0.95rem;
-}
-
-.carousel-shell {
-  position: absolute;
-  inset: 1.2rem;
-  border-radius: calc(var(--radius) - 10px);
-  overflow: hidden;
-  border: 1px solid var(--carousel-shell-line);
-  background: var(--carousel-shell-bg);
-}
-
-.carousel-slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: scale(1.03);
-  transition: opacity 420ms ease, transform 420ms ease;
-}
-
-.carousel-slide.is-active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.carousel-caption {
-  position: absolute;
-  left: 1.25rem;
-  right: 1.25rem;
-  bottom: 1.25rem;
   display: grid;
-  gap: 0.35rem;
-  padding: 1rem 1.1rem;
-  border-radius: 22px;
-  background: var(--carousel-caption-bg);
-  border: 1px solid var(--carousel-caption-line);
-  backdrop-filter: blur(10px);
-}
-
-.carousel-caption strong {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 1.08rem;
-}
-
-.carousel-caption span {
-  color: var(--text-soft);
-  line-height: 1.55;
-}
-
-.carousel-controls {
-  position: absolute;
-  right: 1.4rem;
-  top: 1.6rem;
-  z-index: 2;
-  display: inline-flex;
-  gap: 0.55rem;
-}
-
-.carousel-dot {
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 999px;
-  border: 0;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.24);
-  cursor: pointer;
-}
-
-.carousel-dot.is-active {
-  background: var(--primary);
+  gap: var(--space-4);
 }
 
 .terminal-card,
+.status-card,
 .detail-panel,
 .service-card,
 .process-card,
 .project-card,
 .detail-card {
   background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.service-card,
+.process-card,
+.project-card {
+  transition: border-color 200ms ease, transform 200ms ease, background-color 200ms ease;
+}
+
+.service-card:hover {
+  border-color: var(--accent-border);
+  transform: translateY(-3px);
+}
+
+.service-card:hover .service-icon {
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  color: var(--on-accent);
+}
+
+.process-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+}
+
+.project-card:hover {
+  border-color: var(--border-strong);
+  background: var(--card-strong);
+  transform: translateY(-3px);
+}
+
+.status-card {
+  padding: var(--space-5) var(--space-6);
+}
+
+.status-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-soft);
+}
+
+.status-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--positive);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--positive) 18%, transparent);
+}
+
+.status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.status-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+}
+
+.status-list li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.status-job {
+  color: var(--text-soft);
+}
+
+.status-ok {
+  display: inline-flex;
+  align-items: center;
+  color: var(--positive);
 }
 
 .terminal-card {
-  padding: 1rem 1.2rem 1.35rem;
+  padding: var(--space-5) var(--space-6);
 }
 
 .terminal-head {
   display: flex;
   gap: 0.45rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
 }
 
 .terminal-head span {
@@ -1422,8 +1508,9 @@ h3 {
 
 .terminal-card code {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.55rem;
   font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-sm);
   color: var(--terminal-code);
   white-space: pre-wrap;
 }
@@ -1431,91 +1518,126 @@ h3 {
 .hero-stats {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-6);
 }
 
 .stat {
-  padding: 1.2rem 1.4rem;
-  border-radius: var(--radius-sm);
-  background: var(--stat-surface);
-  border: 1px solid var(--line);
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  border: 1px solid var(--border);
+  transition: border-color 200ms ease;
+}
+
+.stat:hover {
+  border-color: var(--border-strong);
 }
 
 .stat strong {
   display: block;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 1.55rem;
-  margin-bottom: 0.4rem;
+  font-size: var(--text-2xl);
+  margin-bottom: 0.35rem;
+}
+
+.stat span {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
 }
 
 .section {
-  padding: 5.5rem 0 0;
+  padding: var(--space-24) 0 0;
 }
 
 .section-heading,
 .section-heading-page {
-  max-width: 48rem;
-  margin-bottom: 2rem;
+  max-width: 42rem;
+  margin-bottom: var(--space-10);
 }
 
 .section-actions {
   display: flex;
   justify-content: center;
-  margin-top: 1.4rem;
+  margin-top: var(--space-6);
 }
 
 .service-grid,
 .process-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .service-card,
 .process-card,
 .detail-card {
-  padding: 1.4rem;
+  padding: var(--space-6);
 }
 
-.service-number {
-  margin: 0 0 1.25rem;
-  font-family: "IBM Plex Mono", monospace;
-  color: var(--text-muted);
+.service-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-bottom: var(--space-5);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-soft), rgba(79, 98, 227, 0.24));
+  color: var(--accent);
+  transition: background 200ms ease, color 200ms ease;
 }
 
-.lane-block + .lane-block {
-  margin-top: 2.2rem;
+html[data-theme="light"] .service-icon {
+  background: linear-gradient(135deg, var(--accent-soft), rgba(53, 72, 201, 0.18));
 }
 
-.lane-heading {
+.service-icon .icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.process-card-head {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 2rem;
-  align-items: flex-end;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-5);
 }
 
-.lane-heading p:last-child {
-  margin: 0;
-  max-width: 34rem;
+.process-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: var(--radius-sm);
+  background: var(--card-strong);
   color: var(--text-soft);
 }
 
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+.process-icon .icon {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
+.process-step {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--accent);
+  opacity: 0.55;
+}
+
+.project-grid,
 .project-grid-wide {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .project-card {
-  padding: 1.35rem;
+  padding: var(--space-6);
   min-height: 100%;
 }
 
@@ -1532,14 +1654,14 @@ h3 {
 }
 
 .project-card-top {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
 }
 
 .project-category {
-  margin-bottom: 1rem;
-  color: var(--primary);
-  background: var(--primary-soft);
-  border-color: rgba(254, 1, 127, 0.22);
+  margin-bottom: var(--space-4);
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
 }
 
 .project-tagline {
@@ -1547,7 +1669,7 @@ h3 {
 }
 
 .project-summary {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--space-4);
 }
 
 .stack-list,
@@ -1557,17 +1679,17 @@ h3 {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
 .detail-list {
   display: grid;
-  gap: 0.8rem;
+  gap: var(--space-3);
 }
 
 .detail-list li {
   position: relative;
-  padding-left: 1.2rem;
+  padding-left: 1.3rem;
   color: var(--text-soft);
 }
 
@@ -1575,103 +1697,117 @@ h3 {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.72rem;
-  width: 0.42rem;
-  height: 0.42rem;
+  top: 0.62rem;
+  width: 0.4rem;
+  height: 0.4rem;
   border-radius: 999px;
-  background: var(--primary);
+  background: var(--accent);
 }
 
 .project-links {
-  margin-top: 1.2rem;
+  margin-top: var(--space-5);
 }
 
 .inline-link {
+  display: inline-flex;
+  align-items: center;
   font-weight: 600;
+  font-size: var(--text-sm);
   color: var(--text);
+  transition: color 160ms ease;
+}
+
+.inline-link .icon-inline {
+  transition: transform 160ms ease;
+}
+
+.inline-link:hover .icon-inline {
+  transform: translate(2px, -2px);
 }
 
 .detail-page,
 .projects-index {
-  padding-top: 2.5rem;
+  padding-top: var(--space-10);
 }
 
 .detail-hero {
-  padding: 3rem 0 0;
+  padding: var(--space-12) 0 0;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: 1rem;
+  gap: var(--space-4);
   align-items: stretch;
 }
 
 .detail-tagline {
   max-width: 44rem;
   color: var(--text-soft);
+  font-size: var(--text-md);
 }
 
 .detail-stack-preview {
   list-style: none;
   padding: 0;
-  margin: 1.2rem 0 0;
+  margin: var(--space-5) 0 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  gap: 0.6rem;
 }
 
 .detail-stack-preview li {
-  padding: 0.48rem 0.78rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--pill-surface);
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--card);
   color: var(--text-soft);
-  font-size: 0.82rem;
+  font-size: var(--text-xs);
 }
 
 .detail-panel {
-  padding: 1.4rem;
+  padding: var(--space-6);
 }
 
 .detail-chip {
-  margin-bottom: 0.8rem;
+  margin-bottom: var(--space-3);
 }
 
 .detail-proof-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .detail-proof-card {
-  padding: 1.3rem 1.35rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--line);
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
   background: var(--card);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .detail-proof-kicker {
-  margin: 0 0 0.85rem;
+  margin: 0 0 var(--space-3);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
 .detail-proof-card strong {
   display: block;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 1.18rem;
+  font-size: var(--text-lg);
   line-height: 1.2;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
 }
 
 .detail-proof-card span {
   color: var(--text-soft);
+  font-size: var(--text-sm);
 }
 
 .detail-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .detail-grid-rich {
@@ -1679,39 +1815,39 @@ h3 {
 }
 
 .detail-card h2 {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
+  font-size: var(--text-xl);
 }
 
 .detail-card-emphasis {
-  background: linear-gradient(135deg, rgba(254, 1, 127, 0.12), rgba(29, 5, 125, 0.18));
-}
-
-html[data-theme="light"] .detail-card-emphasis {
-  background: linear-gradient(135deg, rgba(254, 1, 127, 0.08), rgba(29, 5, 125, 0.06));
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
 }
 
 .site-footer {
-  margin-top: 6rem;
-  padding: 2rem 0 3rem;
+  margin-top: var(--space-24);
+  padding: var(--space-8) 0 var(--space-12);
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: 1rem;
-  padding: 1.6rem;
-  border-radius: var(--radius);
-  background: var(--footer-surface);
-  border: 1px solid var(--line);
+  gap: var(--space-6);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  align-items: center;
 }
 
 .footer-meta {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
   align-items: center;
-  padding-top: 1rem;
+  padding-top: var(--space-5);
   color: var(--text-muted);
+  font-size: var(--text-sm);
 }
 
 [data-reveal] {
@@ -1723,6 +1859,29 @@ html[data-theme="light"] .detail-card-emphasis {
 [data-reveal].is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+.service-grid [data-reveal]:nth-child(2),
+.process-grid [data-reveal]:nth-child(2),
+.project-grid [data-reveal]:nth-child(2),
+.project-grid-wide [data-reveal]:nth-child(2),
+.detail-proof-grid [data-reveal]:nth-child(2) {
+  transition-delay: 70ms;
+}
+
+.service-grid [data-reveal]:nth-child(3),
+.process-grid [data-reveal]:nth-child(3),
+.project-grid [data-reveal]:nth-child(3),
+.project-grid-wide [data-reveal]:nth-child(3),
+.detail-proof-grid [data-reveal]:nth-child(3) {
+  transition-delay: 140ms;
+}
+
+.service-grid [data-reveal]:nth-child(4),
+.process-grid [data-reveal]:nth-child(4),
+.project-grid [data-reveal]:nth-child(4),
+.project-grid-wide [data-reveal]:nth-child(4) {
+  transition-delay: 210ms;
 }
 
 @media (max-width: 980px) {
@@ -1774,15 +1933,6 @@ html[data-theme="light"] .detail-card-emphasis {
     display: flex;
   }
 
-  .brand-stage {
-    min-height: 26rem;
-  }
-
-  .carousel-caption {
-    left: 1rem;
-    right: 1rem;
-    bottom: 1rem;
-  }
 }
 
 @media (max-width: 640px) {
@@ -1800,9 +1950,6 @@ html[data-theme="light"] .detail-card-emphasis {
     display: none;
   }
 
-  .brand-stage {
-    min-height: 20rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1838,7 +1985,7 @@ const applyTheme = (theme) => {
   const nextTheme = theme === "light" ? "light" : "dark";
   root.setAttribute("data-theme", nextTheme);
   if (themeMeta) {
-    themeMeta.setAttribute("content", nextTheme === "light" ? "#ffffff" : "#1D057D");
+    themeMeta.setAttribute("content", nextTheme === "light" ? "#ffffff" : "#12173A");
   }
   if (themeToggle) {
     const nextLabel = nextTheme === "light"
@@ -1888,41 +2035,6 @@ if ("IntersectionObserver" in window) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
 
-const carousel = document.querySelector("[data-carousel]");
-
-if (carousel) {
-  const slides = Array.from(carousel.querySelectorAll("[data-carousel-slide]"));
-  const dots = Array.from(carousel.querySelectorAll("[data-carousel-dot]"));
-  let activeIndex = 0;
-  let timer;
-
-  const setActive = (index) => {
-    activeIndex = index;
-    slides.forEach((slide, slideIndex) => {
-      slide.classList.toggle("is-active", slideIndex === index);
-    });
-    dots.forEach((dot, dotIndex) => {
-      dot.classList.toggle("is-active", dotIndex === index);
-    });
-  };
-
-  const restart = () => {
-    window.clearInterval(timer);
-    timer = window.setInterval(() => {
-      setActive((activeIndex + 1) % slides.length);
-    }, 4200);
-  };
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      setActive(index);
-      restart();
-    });
-  });
-
-  setActive(0);
-  restart();
-}
 """.strip()
 
 
@@ -1942,11 +2054,11 @@ def render_projects_index(language: str) -> str:
         language,
         route,
         projects_index_markup(language),
-        t(language, "Project Portfolio", "Portfolio de Projetos"),
+        t(language, "Project Archive", "Arquivo de Projetos"),
         t(
             language,
-            "Portfolio of data engineering, analytics, and automation systems by B Tecnologia.",
-            "Portfolio de sistemas de engenharia de dados, analytics e automacao da B Tecnologia.",
+            "Data engineering, analytics, and automation systems delivered by B Tecnologia.",
+            "Sistemas de engenharia de dados, analytics e automacao entregues pela B Tecnologia.",
         ),
     )
 
@@ -1957,7 +2069,7 @@ def render_404() -> str:
     <div>
       <p class="eyebrow">404</p>
       <h1>Page not found</h1>
-      <p class="detail-tagline">The route you asked for does not exist. Use the links below to get back to the portfolio.</p>
+      <p class="detail-tagline">The route you asked for does not exist. Use the links below to get back to the site.</p>
       <div class="hero-actions">
         <a href="/" class="button button-primary">Go home</a>
         <a href="/projects/" class="button button-secondary">View projects</a>
@@ -1965,7 +2077,7 @@ def render_404() -> str:
     </div>
     <div class="detail-panel">
       <div class="detail-chip">Next step</div>
-      <p>If you arrived here from a message or proposal, the homepage and project archive contain the current B Tecnologia portfolio links.</p>
+      <p>If you arrived here from a message or proposal, the homepage and project archive contain the current B Tecnologia links.</p>
     </div>
   </section>
 </main>"""
@@ -1999,8 +2111,8 @@ def webmanifest() -> str:
   "short_name": "BTech",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#09051d",
-  "theme_color": "#1D057D",
+  "background_color": "#0a0a10",
+  "theme_color": "#12173A",
   "icons": [
     {
       "src": "/assets/favicon.svg",
@@ -2033,9 +2145,6 @@ def build_pages() -> None:
     write_text(DIST / "assets" / "brand-mark.svg", svg_logo())
     write_text(DIST / "assets" / "favicon.svg", svg_logo())
     write_text(DIST / "assets" / "og-card.svg", svg_og_card())
-    write_text(DIST / "assets" / "slide-lakehouse.svg", svg_slide_lakehouse())
-    write_text(DIST / "assets" / "slide-observability.svg", svg_slide_observability())
-    write_text(DIST / "assets" / "slide-revenue-automation.svg", svg_slide_revenue_automation())
 
 
 if __name__ == "__main__":
