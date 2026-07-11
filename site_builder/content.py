@@ -1,6 +1,12 @@
 SITE = {
     "name": "B Tecnologia",
     "site_url": "https://brunoluizmendes.github.io",
+    "founder_name": "Bruno Mendes",
+    "founder_intro_pill_en": "Hi, I'm Bruno",
+    "founder_intro_pill_pt": "Oi, sou o Bruno",
+    "founder_photo": None,
+    "founder_bio_en": None,
+    "founder_bio_pt": None,
     "headline_en": "Data and automation that don't call you at 3am.",
     "headline_pt": "Dados e automacao que nao te ligam de madrugada.",
     "subheadline_en": (
@@ -127,6 +133,11 @@ SITE = {
         "Entrega de engenharia 100% senior, comunicacao direta, e sistemas feitos para durar mais que os primeiros seis meses."
     ),
 }
+
+# Real company/role/period entries pending from Bruno. Each item follows the same
+# bilingual _en/_pt convention as PROJECTS. experience_timeline_markup() renders
+# nothing while this list is empty.
+EXPERIENCE = []
 
 LANES = [
     {

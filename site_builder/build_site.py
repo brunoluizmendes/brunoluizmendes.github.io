@@ -4,9 +4,9 @@ import html
 import shutil
 from pathlib import Path
 try:
-    from .content import LANES, PROJECTS, SITE
+    from .content import EXPERIENCE, LANES, PROJECTS, SITE
 except ImportError:
-    from content import LANES, PROJECTS, SITE
+    from content import EXPERIENCE, LANES, PROJECTS, SITE
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -151,6 +151,10 @@ def header_markup(language: str, route: str) -> str:
     nav_items = [
         (f"{home}#services", t(language, "Services", "Servicos")),
         (f"{home}#projects", t(language, "Projects", "Projetos")),
+    ]
+    if EXPERIENCE:
+        nav_items.append((f"{home}#experience", t(language, "Experience", "Trajetoria")))
+    nav_items += [
         (f"{home}#process", t(language, "Process", "Processo")),
         (f"{home}#contact", t(language, "Contact", "Contato")),
     ]
@@ -354,6 +358,22 @@ def status_panel_markup(language: str) -> str:
 </div>"""
 
 
+def section_badge_markup(number: str, label_en: str, label_pt: str, language: str) -> str:
+    label = html.escape(t(language, label_en, label_pt))
+    return f"""<div class="section-badge">
+  <span class="section-badge-number">{html.escape(number)}</span>
+  <span class="section-badge-label">{label}</span>
+</div>"""
+
+
+def founder_photo_markup(language: str) -> str:
+    photo = SITE.get("founder_photo")
+    if not photo:
+        return ""
+    alt = html.escape(t(language, f"Photo of {SITE['founder_name']}", f"Foto de {SITE['founder_name']}"))
+    return f'<img src="{html.escape(photo)}" alt="{alt}" class="founder-photo" loading="lazy">'
+
+
 def hero_markup(language: str) -> str:
     actions = []
     primary_label = t(language, "Book a call", "Agendar uma conversa")
@@ -390,13 +410,22 @@ def hero_markup(language: str) -> str:
             "python -- dbt -- warehouses -- automacao",
         )
     )
+    bio = t(language, SITE.get("founder_bio_en"), SITE.get("founder_bio_pt"))
+    bio_markup = f'<p class="founder-bio">{html.escape(bio)}</p>' if bio else ""
+    photo_markup = founder_photo_markup(language)
     return f"""<section class="hero">
   {svg_blob(BLOB_HERO_PATH, "blobHero", "hero-blob")}
   <div class="hero-halftone halftone" aria-hidden="true"></div>
   <span class="scatter-ring hero-ring" aria-hidden="true"></span>
   <div class="hero-copy" data-reveal>
-    <p class="eyebrow">{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</p>
-    <h1>{html.escape(t(language, SITE['headline_en'], SITE['headline_pt']))}</h1>
+    {section_badge_markup("01", "Intro", "Intro", language)}
+    <div class="founder-intro">
+      {photo_markup}
+      <p class="founder-pill">{html.escape(t(language, SITE['founder_intro_pill_en'], SITE['founder_intro_pill_pt']))}</p>
+    </div>
+    <h1>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</h1>
+    {bio_markup}
+    <p class="hero-support-headline">{html.escape(t(language, SITE['headline_en'], SITE['headline_pt']))}</p>
     <p class="hero-text">{html.escape(t(language, SITE['subheadline_en'], SITE['subheadline_pt']))}</p>
     <p class="hero-location">{html.escape(t(language, SITE['location_en'], SITE['location_pt']))}</p>
     <div class="hero-actions">{''.join(actions)}</div>
@@ -432,6 +461,7 @@ def services_markup(language: str) -> str:
         for item in SITE["services"]
     )
     return f"""<section class="section section-services" id="services">
+  {section_badge_markup("02", "Services", "Servicos", language)}
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'Areas of work', 'Frentes de atuacao'))}</p>
     <h2>{html.escape(t(language, 'Four problems, one engineer', 'Quatro frentes, um engenheiro'))}</h2>
@@ -444,6 +474,7 @@ def project_sections_markup(language: str) -> str:
     cards = "".join(project_card(language, project, compact=True) for project in featured_projects())
     proof = "".join(f"<li>{html.escape(item)}</li>" for item in SITE["proof_ribbon"])
     return f"""<section class="section section-projects" id="projects">
+  {section_badge_markup("03", "Proof", "Prova", language)}
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'Proof, not claims', 'Prova, nao promessa'))}</p>
     <h2>{html.escape(t(language, 'Selected projects', 'Projetos selecionados'))}</h2>
@@ -455,6 +486,31 @@ def project_sections_markup(language: str) -> str:
   <div class="section-actions">
     <a href="{route_prefix(language)}/projects/" class="button button-secondary">{html.escape(t(language, 'View all projects', 'Ver todos os projetos'))}{icon('arrow-right', 'icon icon-inline')}</a>
   </div>
+</section>"""
+
+
+def experience_timeline_markup(language: str) -> str:
+    if not EXPERIENCE:
+        return ""
+    rows = "".join(
+        f"""<article class="experience-row" data-reveal>
+  <span class="experience-step">{html.escape(item.get('step', ''))}</span>
+  <div class="experience-row-body">
+    <h3>{html.escape(t(language, item['role_en'], item['role_pt']))}</h3>
+    <p class="experience-company">{html.escape(item['company'])}</p>
+    <p class="experience-period">{html.escape(item['period'])}</p>
+    <p>{html.escape(t(language, item.get('summary_en', ''), item.get('summary_pt', '')))}</p>
+  </div>
+</article>"""
+        for item in EXPERIENCE
+    )
+    return f"""<section class="section section-experience" id="experience">
+  {section_badge_markup("04", "Experience", "Trajetoria", language)}
+  <div class="section-heading">
+    <p class="eyebrow">{html.escape(t(language, 'Track record', 'Trajetoria'))}</p>
+    <h2>{html.escape(t(language, 'Where this came from', 'De onde isso veio'))}</h2>
+  </div>
+  <div class="experience-timeline">{rows}</div>
 </section>"""
 
 
@@ -471,6 +527,7 @@ def process_markup(language: str) -> str:
         for item in SITE["process"]
     )
     return f"""<section class="section section-process" id="process">
+  {section_badge_markup("05", "Process", "Processo", language)}
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'How an engagement runs', 'Como um projeto acontece'))}</p>
     <h2>{html.escape(t(language, 'From first call to handoff', 'Da primeira call ao handoff'))}</h2>
@@ -484,6 +541,7 @@ def home_markup(language: str) -> str:
   {hero_markup(language)}
   {services_markup(language)}
   {project_sections_markup(language)}
+  {experience_timeline_markup(language)}
   {process_markup(language)}
 </main>"""
 
@@ -1003,7 +1061,12 @@ main,
 
 .nav-link {
   padding: 0.3rem 0.1rem;
-  transition: color 160ms ease;
+  display: inline-block;
+  transition: color 160ms ease, letter-spacing 200ms ease;
+}
+
+.nav-link:hover {
+  letter-spacing: 0.03em;
 }
 
 .nav-link:hover,
@@ -1242,6 +1305,75 @@ html[data-theme="light"] .halftone {
   color: var(--accent);
 }
 
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 var(--space-4);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.section-badge-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.section-badge-label {
+  color: var(--text-muted);
+}
+
+.founder-intro {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 var(--space-4);
+}
+
+.founder-photo {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong);
+  object-fit: cover;
+}
+
+.founder-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: var(--text-xs);
+  color: var(--text-soft);
+}
+
+.founder-bio {
+  max-width: 46ch;
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-lg);
+  color: var(--text);
+}
+
+.hero-support-headline {
+  max-width: 34ch;
+  margin: 0 0 var(--space-2);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-soft);
+}
+
 h1,
 h2,
 h3 {
@@ -1388,7 +1520,8 @@ h3 {
 .service-card,
 .process-card,
 .project-card,
-.detail-card {
+.detail-card,
+.experience-row {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -1627,6 +1760,43 @@ html[data-theme="light"] .service-icon {
   font-weight: 700;
   color: var(--accent);
   opacity: 0.55;
+}
+
+.experience-timeline {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.experience-row {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: var(--space-5);
+  padding: var(--space-6);
+}
+
+.experience-step {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--accent);
+  opacity: 0.55;
+}
+
+.experience-row-body h3 {
+  margin-bottom: var(--space-1);
+}
+
+.experience-company {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.experience-period {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .project-grid,
