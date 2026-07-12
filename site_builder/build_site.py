@@ -13,10 +13,6 @@ ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
 FEATURED_PROJECT_SLUGS = (
     "financial-process-automation-scraping",
-    "gcp-lakehouse-dbt-bigquery",
-    "erp-to-bigquery-finance-analytics",
-    "meta-ads-to-bigquery-pipeline",
-    "dagster-dbt-orchestration-pipeline",
     "ai-automation-engineer-workflows",
 )
 
@@ -488,7 +484,7 @@ def project_sections_markup(language: str) -> str:
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'Proof, not claims', 'Prova, nao promessa'))}</p>
     <h2>{html.escape(t(language, 'Selected projects', 'Projetos selecionados'))}</h2>
-    <p>{html.escape(t(language, 'Six repositories that show the delivery pattern: clean schemas, replay-safe pipelines, and a handoff another engineer can pick up.', 'Seis repositorios que mostram o padrao de entrega: schemas limpos, pipelines seguros para replay e um handoff que outro engenheiro consegue assumir.'))}</p>
+    <p>{html.escape(t(language, 'Clean schemas, replay-safe pipelines, a handoff another engineer can pick up.', 'Schemas limpos, pipelines seguros para replay, um handoff que outro engenheiro consegue assumir.'))}</p>
   </div>
   <div class="project-grid">{cards}</div>
   <p class="eyebrow proof-ribbon-caption">{html.escape(t(language, 'Stack behind the projects above', 'Stack por tras dos projetos acima'))}</p>
