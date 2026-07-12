@@ -157,12 +157,6 @@ def header_markup(language: str, route: str) -> str:
         home = "/"
     nav_items = [
         (f"{home}#services", t(language, "Services", "Servicos")),
-        (f"{home}#projects", t(language, "Projects", "Projetos")),
-    ]
-    if EXPERIENCE:
-        nav_items.append((f"{home}#experience", t(language, "Experience", "Trajetoria")))
-    nav_items += [
-        (f"{home}#process", t(language, "Process", "Processo")),
         (f"{home}#contact", t(language, "Contact", "Contato")),
     ]
     nav = "".join(
@@ -401,7 +395,7 @@ def hero_markup(language: str) -> str:
     {photo_markup}
     <p class="founder-pill">{html.escape(t(language, SITE['founder_intro_pill_en'], SITE['founder_intro_pill_pt']))}</p>
   </div>
-  <h1 class="hero-name" data-reveal>{html.escape(SITE['founder_name'])}</h1>
+  <h1 class="hero-name" data-reveal style="--typing-chars: {len(SITE['founder_name'])}">{html.escape(SITE['founder_name'])}</h1>
   <p class="hero-role" data-reveal>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</p>
   <span class="hero-divider" aria-hidden="true"></span>
   {bio_markup}
@@ -1355,30 +1349,38 @@ html[data-theme="light"] .halftone {
   color: var(--text-soft);
 }
 
-@keyframes hero-name-flicker {
-  0%, 92%, 100% {
-    opacity: 1;
+@keyframes hero-name-typing {
+  from {
+    width: 0;
   }
-  93% {
-    opacity: 0.4;
+  to {
+    width: calc(var(--typing-chars) * 1ch);
   }
-  94% {
-    opacity: 1;
+}
+
+@keyframes hero-name-caret {
+  0%, 100% {
+    border-color: transparent;
   }
-  95% {
-    opacity: 0.55;
-  }
-  96% {
-    opacity: 1;
+  50% {
+    border-color: var(--accent);
   }
 }
 
 .hero-name {
+  display: inline-block;
   margin: 0 0 var(--space-2);
   font-size: var(--text-hero);
   line-height: 1;
   max-width: none;
-  animation: hero-name-flicker 6s ease-in-out infinite;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  border-right: 0.05em solid transparent;
+  width: calc(var(--typing-chars) * 1ch);
+  animation:
+    hero-name-typing 1.6s steps(var(--typing-chars), end) 0.3s both,
+    hero-name-caret 0.85s step-end infinite;
 }
 
 .hero-role {
@@ -2217,6 +2219,16 @@ html[data-theme="light"] .service-icon {
 
   .brand-text span {
     display: none;
+  }
+
+  .hero-name {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    white-space: normal;
+    overflow: visible;
+    border-right: none;
+    animation: none;
   }
 
 }
