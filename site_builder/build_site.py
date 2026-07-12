@@ -172,13 +172,18 @@ def header_markup(language: str, route: str) -> str:
       <a href="{SITE['github_url']}" class="header-social-icon" target="_blank" rel="noreferrer" aria-label="GitHub">{icon('github')}</a>
     </div>
   </div>
-  <a class="brand" href="{home}">
-    <img src="/assets/brand-mark.svg" alt="{html.escape(SITE['logo_alt'])}" class="brand-mark">
-    <span class="brand-text">
-      <strong>{html.escape(SITE['name'])}</strong>
-      <span>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</span>
-    </span>
-  </a>
+  <div class="brand-menu">
+    <a class="brand" href="{home}">
+      <img src="/assets/brand-mark.svg" alt="{html.escape(SITE['logo_alt'])}" class="brand-mark">
+      <span class="brand-text">
+        <strong>{html.escape(SITE['name'])}</strong>
+        <span>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</span>
+      </span>
+    </a>
+    <div class="brand-dropdown">
+      {nav}
+    </div>
+  </div>
   <div class="header-end">
   <button class="menu-toggle" type="button" aria-label="{html.escape(t(language, 'Toggle navigation', 'Abrir navegacao'))}">
     <span class="menu-toggle-icon menu-toggle-open" aria-hidden="true">{icon('menu')}</span>
@@ -1076,12 +1081,49 @@ main,
   justify-self: end;
 }
 
+.brand-menu {
+  position: relative;
+  justify-self: center;
+}
+
 .brand {
   display: flex;
   align-items: center;
   gap: 0.85rem;
   border-radius: var(--radius-full);
-  justify-self: center;
+}
+
+.brand-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 9rem;
+  margin-top: 0.6rem;
+  padding: 0.6rem;
+  background: var(--header-surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 4px);
+  transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+}
+
+.brand-dropdown .nav-link {
+  padding: 0.4rem 0.6rem;
+}
+
+.brand-menu:hover .brand-dropdown,
+.brand-menu:focus-within .brand-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
 }
 
 .brand-mark {
@@ -2144,7 +2186,17 @@ html[data-theme="light"] .service-icon {
   transition-delay: 210ms;
 }
 
+@media (min-width: 981px) {
+  .site-nav .nav-link {
+    display: none;
+  }
+}
+
 @media (max-width: 980px) {
+  .brand-dropdown {
+    display: none;
+  }
+
   .detail-hero,
   .footer-grid,
   .detail-proof-grid,
