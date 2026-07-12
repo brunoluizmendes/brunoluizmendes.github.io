@@ -1284,10 +1284,7 @@ html[data-theme="light"] .halftone {
 
 .hero-name {
   margin: 0 0 var(--space-2);
-  font-family: "Fraunces", "Space Grotesk", serif;
-  font-weight: 600;
   font-size: var(--text-hero);
-  letter-spacing: -0.01em;
   line-height: 1;
   max-width: none;
 }
@@ -1355,11 +1352,17 @@ html[data-theme="light"] .halftone {
 }
 
 h1,
-h2,
+h2 {
+  margin: 0 0 var(--space-4);
+  font-family: "Fraunces", serif;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
 h3 {
   margin: 0 0 var(--space-4);
   font-family: "Space Grotesk", sans-serif;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   font-weight: 700;
 }
 
