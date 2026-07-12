@@ -86,7 +86,7 @@ def page_description(language: str, custom_description: str | None = None) -> st
 def theme_bootstrap_script() -> str:
     return """<script>
 (() => {
-  const key = "b-tech-theme";
+  const key = "b-tech-theme-v2";
   let theme = "light";
   try {
     const stored = window.localStorage.getItem(key);
@@ -144,6 +144,13 @@ def head_markup(language: str, route: str, title: str | None = None, description
 </head>"""
 
 
+def email_icon_markup() -> str:
+    email = SITE.get("email")
+    if not email:
+        return ""
+    return f'<a href="mailto:{html.escape(email)}" class="header-social-icon" aria-label="Email">{icon("mail")}</a>'
+
+
 def header_markup(language: str, route: str) -> str:
     home = route_prefix(language) or "/"
     if home == "":
@@ -167,6 +174,14 @@ def header_markup(language: str, route: str) -> str:
     theme_to_light = t(language, "Switch to light mode", "Mudar para modo claro")
     theme_to_dark = t(language, "Switch to dark mode", "Mudar para modo escuro")
     return f"""<header class="site-header" data-open="false">
+  <div class="header-start">
+    <a href="{SITE['calendly_url']}" class="button button-primary button-compact header-cta" target="_blank" rel="noreferrer">{html.escape(t(language, 'Book a call', 'Agendar conversa'))}<span class="header-cta-dot" aria-hidden="true"></span></a>
+    <div class="header-socials">
+      <a href="{SITE['linkedin_url']}" class="header-social-icon" target="_blank" rel="noreferrer" aria-label="LinkedIn">{icon('linkedin')}</a>
+      {email_icon_markup()}
+      <a href="{SITE['github_url']}" class="header-social-icon" target="_blank" rel="noreferrer" aria-label="GitHub">{icon('github')}</a>
+    </div>
+  </div>
   <a class="brand" href="{home}">
     <img src="/assets/brand-mark.svg" alt="{html.escape(SITE['logo_alt'])}" class="brand-mark">
     <span class="brand-text">
@@ -174,13 +189,13 @@ def header_markup(language: str, route: str) -> str:
       <span>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</span>
     </span>
   </a>
+  <div class="header-end">
   <button class="menu-toggle" type="button" aria-label="{html.escape(t(language, 'Toggle navigation', 'Abrir navegacao'))}">
     <span class="menu-toggle-icon menu-toggle-open" aria-hidden="true">{icon('menu')}</span>
     <span class="menu-toggle-icon menu-toggle-close" aria-hidden="true">{icon('close')}</span>
   </button>
   <nav class="site-nav">
     {nav}
-    <a href="{SITE['calendly_url']}" class="button button-primary button-compact" target="_blank" rel="noreferrer">{html.escape(t(language, 'Book a call', 'Agendar conversa'))}</a>
     <button
       class="theme-switch"
       type="button"
@@ -198,6 +213,7 @@ def header_markup(language: str, route: str) -> str:
     </a>
     <span class="header-clock" data-clock aria-hidden="true"></span>
   </nav>
+  </div>
 </header>"""
 
 
@@ -276,6 +292,9 @@ ICONS: dict[str, str] = {
     "package-check": '<path d="m16 16 2 2 4-4"></path><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l1.5-.87"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path>',
     "check": '<path d="M20 6 9 17l-5-5"></path>',
     "sparkle": '<path d="m12 3-1.9 4.9L5 9.8l4.9 1.9L12 17l1.9-5.1L19 9.9l-5.1-1.9Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path>',
+    "github": '<path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"></path>',
+    "linkedin": '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle>',
+    "mail": '<rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>',
 }
 
 
@@ -478,7 +497,7 @@ def project_sections_markup(language: str) -> str:
     <p>{html.escape(t(language, 'Six repositories that show the delivery pattern: clean schemas, replay-safe pipelines, and a handoff another engineer can pick up.', 'Seis repositorios que mostram o padrao de entrega: schemas limpos, pipelines seguros para replay e um handoff que outro engenheiro consegue assumir.'))}</p>
   </div>
   <div class="project-grid">{cards}</div>
-  <p class="eyebrow">{html.escape(t(language, 'Stack behind the projects above', 'Stack por tras dos projetos acima'))}</p>
+  <p class="eyebrow proof-ribbon-caption">{html.escape(t(language, 'Stack behind the projects above', 'Stack por tras dos projetos acima'))}</p>
   <ul class="proof-ribbon">{proof}</ul>
   <div class="section-actions">
     <a href="{route_prefix(language)}/projects/" class="button button-secondary">{html.escape(t(language, 'View all projects', 'Ver todos os projetos'))}{icon('arrow-right', 'icon icon-inline')}</a>
@@ -1003,9 +1022,9 @@ main,
   top: 0;
   z-index: 50;
   margin-top: 1rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-4);
   padding: var(--space-4) var(--space-5);
   background: var(--header-surface);
@@ -1014,11 +1033,65 @@ main,
   border-radius: var(--radius-full);
 }
 
+.header-start {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-self: start;
+}
+
+.header-cta {
+  gap: 0.5rem;
+}
+
+.header-cta-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--on-accent);
+  opacity: 0.8;
+}
+
+.header-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.header-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.header-social-icon:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.header-social-icon .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.header-end {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+}
+
 .brand {
   display: flex;
   align-items: center;
   gap: 0.85rem;
   border-radius: var(--radius-full);
+  justify-self: center;
 }
 
 .brand-mark {
@@ -1282,11 +1355,30 @@ html[data-theme="light"] .halftone {
   color: var(--text-soft);
 }
 
+@keyframes hero-name-flicker {
+  0%, 92%, 100% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.4;
+  }
+  94% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.55;
+  }
+  96% {
+    opacity: 1;
+  }
+}
+
 .hero-name {
   margin: 0 0 var(--space-2);
   font-size: var(--text-hero);
   line-height: 1;
   max-width: none;
+  animation: hero-name-flicker 6s ease-in-out infinite;
 }
 
 .hero-role {
@@ -1466,6 +1558,10 @@ h3 {
 .button-ghost:hover {
   border-color: var(--accent-border);
   color: var(--accent);
+}
+
+.proof-ribbon-caption {
+  margin-top: var(--space-12);
 }
 
 .proof-ribbon {
@@ -2070,8 +2166,19 @@ html[data-theme="light"] .service-icon {
   }
 
   .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     border-radius: 28px;
-    align-items: flex-start;
+    align-items: center;
+  }
+
+  .header-socials {
+    display: none;
+  }
+
+  .header-end {
+    display: contents;
   }
 
   .menu-toggle {
@@ -2132,13 +2239,17 @@ html[data-theme="light"] .service-icon {
   .theme-switch::after {
     transition: none;
   }
+
+  .hero-name {
+    animation: none;
+  }
 }
 """.strip()
 
 
 def site_js() -> str:
     return """
-const themeKey = "b-tech-theme";
+const themeKey = "b-tech-theme-v2";
 const root = document.documentElement;
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeMeta = document.querySelector("#theme-color-meta");

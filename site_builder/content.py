@@ -7,6 +7,7 @@ SITE = {
     "founder_photo": None,
     "founder_bio_en": None,
     "founder_bio_pt": None,
+    "email": None,
     "headline_en": "Data and automation that don't call you at 3am.",
     "headline_pt": "Dados e automacao que nao te ligam de madrugada.",
     "subheadline_en": (
