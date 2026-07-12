@@ -87,14 +87,14 @@ def theme_bootstrap_script() -> str:
     return """<script>
 (() => {
   const key = "b-tech-theme";
-  let theme = "dark";
+  let theme = "light";
   try {
     const stored = window.localStorage.getItem(key);
     if (stored === "light" || stored === "dark") {
       theme = stored;
     }
   } catch (error) {
-    theme = "dark";
+    theme = "light";
   }
   document.documentElement.setAttribute("data-theme", theme);
 })();
@@ -138,7 +138,7 @@ def head_markup(language: str, route: str, title: str | None = None, description
   {theme_bootstrap_script()}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/styles.css">
   <script defer src="/assets/app.js"></script>
 </head>"""
@@ -196,6 +196,7 @@ def header_markup(language: str, route: str) -> str:
       <span class="lang-current">{current_label}</span>
       <span class="lang-next">{switch_label}</span>
     </a>
+    <span class="header-clock" data-clock aria-hidden="true"></span>
   </nav>
 </header>"""
 
@@ -229,7 +230,14 @@ def footer_markup(language: str) -> str:
     </div>
     <p>© 2026 {html.escape(SITE['name'])}</p>
   </div>
+  {ascii_strip_markup()}
 </footer>"""
+
+
+def ascii_strip_markup() -> str:
+    pattern = "!!((%%@@**::  "
+    line = html.escape((pattern * 40)[:520])
+    return f'<div class="ascii-strip" aria-hidden="true">{line}</div>'
 
 
 def theme_sun_icon() -> str:
@@ -279,10 +287,6 @@ def icon(name: str, css_class: str = "icon") -> str:
     )
 
 
-BLOB_HERO_PATH = (
-    "M320,58 C428,40 552,98 588,202 C624,306 598,428 512,494 "
-    "C426,560 288,566 190,502 C92,438 54,318 96,214 C138,110 212,76 320,58 Z"
-)
 BLOB_FOOTER_PATH = (
     "M300,44 C398,30 472,120 452,222 C432,324 494,428 410,486 "
     "C326,544 208,522 148,438 C88,354 74,232 138,146 C202,60 202,58 300,44 Z"
@@ -358,14 +362,6 @@ def status_panel_markup(language: str) -> str:
 </div>"""
 
 
-def section_badge_markup(number: str, label_en: str, label_pt: str, language: str) -> str:
-    label = html.escape(t(language, label_en, label_pt))
-    return f"""<div class="section-badge">
-  <span class="section-badge-number">{html.escape(number)}</span>
-  <span class="section-badge-label">{label}</span>
-</div>"""
-
-
 def founder_photo_markup(language: str) -> str:
     photo = SITE.get("founder_photo")
     if not photo:
@@ -375,15 +371,32 @@ def founder_photo_markup(language: str) -> str:
 
 
 def hero_markup(language: str) -> str:
-    actions = []
     primary_label = t(language, "Book a call", "Agendar uma conversa")
     secondary_label = t(language, "Connect on LinkedIn", "Conectar no LinkedIn")
-    actions.append(
-        f'<a href="{cta_url()}" class="button button-primary" target="_blank" rel="noreferrer">{html.escape(primary_label)}{icon("arrow-up-right", "icon icon-inline")}</a>'
-    )
-    actions.append(
-        f'<a href="{SITE["linkedin_url"]}" class="button button-secondary" target="_blank" rel="noreferrer">{html.escape(secondary_label)}{icon("arrow-up-right", "icon icon-inline")}</a>'
-    )
+    status_label = t(language, "Open to new projects", "Disponivel para novos projetos")
+    bio = t(language, SITE.get("founder_bio_en"), SITE.get("founder_bio_pt"))
+    bio_markup = f'<p class="hero-bio">{html.escape(bio)}</p>' if bio else ""
+    photo_markup = founder_photo_markup(language)
+    return f"""<section class="hero hero-centered">
+  <div class="founder-intro" data-reveal>
+    {photo_markup}
+    <p class="founder-pill">{html.escape(t(language, SITE['founder_intro_pill_en'], SITE['founder_intro_pill_pt']))}</p>
+  </div>
+  <h1 class="hero-name" data-reveal>{html.escape(SITE['founder_name'])}</h1>
+  <p class="hero-role" data-reveal>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</p>
+  <span class="hero-divider" aria-hidden="true"></span>
+  {bio_markup}
+  <p class="hero-contact-line" data-reveal>
+    <span class="hero-status"><span class="hero-status-dot" aria-hidden="true"></span>{html.escape(status_label)}</span>
+    <span class="hero-contact-sep">&middot;</span>
+    <a href="{cta_url()}" class="hero-contact-link" target="_blank" rel="noreferrer">{html.escape(primary_label)}</a>
+    <span class="hero-contact-sep">&middot;</span>
+    <a href="{SITE['linkedin_url']}" class="hero-contact-link" target="_blank" rel="noreferrer">{html.escape(secondary_label)}</a>
+  </p>
+</section>"""
+
+
+def proof_strip_markup(language: str) -> str:
     stats = "".join(
         f"""<div class="stat">
   <strong>{html.escape(item['value'])}</strong>
@@ -410,27 +423,14 @@ def hero_markup(language: str) -> str:
             "python -- dbt -- warehouses -- automacao",
         )
     )
-    bio = t(language, SITE.get("founder_bio_en"), SITE.get("founder_bio_pt"))
-    bio_markup = f'<p class="founder-bio">{html.escape(bio)}</p>' if bio else ""
-    photo_markup = founder_photo_markup(language)
-    return f"""<section class="hero">
-  {svg_blob(BLOB_HERO_PATH, "blobHero", "hero-blob")}
-  <div class="hero-halftone halftone" aria-hidden="true"></div>
-  <span class="scatter-ring hero-ring" aria-hidden="true"></span>
-  <div class="hero-copy" data-reveal>
-    {section_badge_markup("01", "Intro", "Intro", language)}
-    <div class="founder-intro">
-      {photo_markup}
-      <p class="founder-pill">{html.escape(t(language, SITE['founder_intro_pill_en'], SITE['founder_intro_pill_pt']))}</p>
-    </div>
-    <h1>{html.escape(t(language, SITE['role_en'], SITE['role_pt']))}</h1>
-    {bio_markup}
-    <p class="hero-support-headline">{html.escape(t(language, SITE['headline_en'], SITE['headline_pt']))}</p>
-    <p class="hero-text">{html.escape(t(language, SITE['subheadline_en'], SITE['subheadline_pt']))}</p>
+    return f"""<section class="section section-proof-strip" id="proof">
+  <div class="section-heading">
+    <p class="eyebrow">{html.escape(t(language, 'What actually ships', 'O que realmente sai do forno'))}</p>
+    <h2>{html.escape(t(language, SITE['headline_en'], SITE['headline_pt']))}</h2>
+    <p>{html.escape(t(language, SITE['subheadline_en'], SITE['subheadline_pt']))}</p>
     <p class="hero-location">{html.escape(t(language, SITE['location_en'], SITE['location_pt']))}</p>
-    <div class="hero-actions">{''.join(actions)}</div>
   </div>
-  <div class="hero-visual">
+  <div class="proof-strip-grid">
     {status_panel_markup(language)}
     <div class="terminal-card" data-reveal>
       <div class="terminal-head">
@@ -445,9 +445,8 @@ def hero_markup(language: str) -> str:
         <span>{html.escape(terminal_lines[5])}</span>
       </code>
     </div>
-    <span class="scatter-orb hero-orb" aria-hidden="true"></span>
   </div>
-  <div class="hero-stats">{stats}</div>
+  <div class="stat-grid">{stats}</div>
 </section>"""
 
 
@@ -461,7 +460,6 @@ def services_markup(language: str) -> str:
         for item in SITE["services"]
     )
     return f"""<section class="section section-services" id="services">
-  {section_badge_markup("02", "Services", "Servicos", language)}
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'Areas of work', 'Frentes de atuacao'))}</p>
     <h2>{html.escape(t(language, 'Four problems, one engineer', 'Quatro frentes, um engenheiro'))}</h2>
@@ -474,7 +472,6 @@ def project_sections_markup(language: str) -> str:
     cards = "".join(project_card(language, project, compact=True) for project in featured_projects())
     proof = "".join(f"<li>{html.escape(item)}</li>" for item in SITE["proof_ribbon"])
     return f"""<section class="section section-projects" id="projects">
-  {section_badge_markup("03", "Proof", "Prova", language)}
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'Proof, not claims', 'Prova, nao promessa'))}</p>
     <h2>{html.escape(t(language, 'Selected projects', 'Projetos selecionados'))}</h2>
@@ -505,7 +502,6 @@ def experience_timeline_markup(language: str) -> str:
         for item in EXPERIENCE
     )
     return f"""<section class="section section-experience" id="experience">
-  {section_badge_markup("04", "Experience", "Trajetoria", language)}
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'Track record', 'Trajetoria'))}</p>
     <h2>{html.escape(t(language, 'Where this came from', 'De onde isso veio'))}</h2>
@@ -527,7 +523,6 @@ def process_markup(language: str) -> str:
         for item in SITE["process"]
     )
     return f"""<section class="section section-process" id="process">
-  {section_badge_markup("05", "Process", "Processo", language)}
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'How an engagement runs', 'Como um projeto acontece'))}</p>
     <h2>{html.escape(t(language, 'From first call to handoff', 'Da primeira call ao handoff'))}</h2>
@@ -539,6 +534,7 @@ def process_markup(language: str) -> str:
 def home_markup(language: str) -> str:
     return f"""<main>
   {hero_markup(language)}
+  {proof_strip_markup(language)}
   {services_markup(language)}
   {project_sections_markup(language)}
   {experience_timeline_markup(language)}
@@ -849,6 +845,7 @@ def site_css() -> str:
   --text-3xl: clamp(2rem, 3.4vw, 2.5rem);
   --text-4xl: clamp(2.5rem, 4.2vw, 3.25rem);
   --text-5xl: clamp(2.75rem, 5.6vw, 4.25rem);
+  --text-hero: clamp(3.5rem, 9vw, 7.5rem);
 
   --content: 1160px;
   --theme-color: #0a0a10;
@@ -1097,6 +1094,13 @@ main,
   border-color: var(--border-strong);
 }
 
+.header-clock {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
 .theme-switch {
   position: relative;
   display: inline-grid;
@@ -1197,30 +1201,19 @@ html[data-theme="light"] .theme-option-light {
   overflow: hidden;
 }
 
-.hero {
-  padding: var(--space-12) 0 var(--space-4);
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: var(--space-10);
-  align-items: start;
+.hero-centered {
+  padding: var(--space-24) 0 var(--space-16);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto;
 }
 
-.hero-blob,
 .footer-blob {
   position: absolute;
   pointer-events: none;
-}
-
-.hero-blob {
-  top: -5rem;
-  right: -7rem;
-  width: 34rem;
-  height: 34rem;
-  filter: blur(4px);
-  opacity: 0.6;
-}
-
-.footer-blob {
   bottom: -8rem;
   left: -9rem;
   width: 26rem;
@@ -1229,7 +1222,6 @@ html[data-theme="light"] .theme-option-light {
   opacity: 0.45;
 }
 
-html[data-theme="light"] .hero-blob,
 html[data-theme="light"] .footer-blob {
   opacity: 0.14;
 }
@@ -1244,13 +1236,6 @@ html[data-theme="light"] .footer-blob {
   pointer-events: none;
 }
 
-.hero-halftone {
-  bottom: -3rem;
-  left: -3rem;
-  -webkit-mask-image: radial-gradient(circle at 0% 100%, rgba(0, 0, 0, 0.9), transparent 70%);
-  mask-image: radial-gradient(circle at 0% 100%, rgba(0, 0, 0, 0.9), transparent 70%);
-}
-
 .footer-halftone {
   top: -3rem;
   right: -3rem;
@@ -1262,40 +1247,6 @@ html[data-theme="light"] .halftone {
   opacity: 0.16;
 }
 
-.scatter-ring,
-.scatter-orb {
-  position: absolute;
-  border-radius: 999px;
-  pointer-events: none;
-}
-
-.scatter-ring {
-  border: 1px solid var(--border-strong);
-}
-
-.scatter-orb {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  opacity: 0.7;
-}
-
-.hero-ring {
-  top: 2.5rem;
-  left: 51%;
-  width: 3.2rem;
-  height: 3.2rem;
-}
-
-.hero-orb {
-  bottom: -0.6rem;
-  right: 2.2rem;
-  width: 0.9rem;
-  height: 0.9rem;
-}
-
-.hero-copy {
-  padding-top: var(--space-8);
-}
-
 .eyebrow {
   margin: 0 0 var(--space-4);
   font-family: "IBM Plex Mono", monospace;
@@ -1305,37 +1256,11 @@ html[data-theme="light"] .halftone {
   color: var(--accent);
 }
 
-.section-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0 0 var(--space-4);
-  font-family: "IBM Plex Mono", monospace;
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-}
-
-.section-badge-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.6rem;
-  padding: 0.15rem 0.4rem;
-  border-radius: var(--radius-sm);
-  background: var(--accent);
-  color: var(--on-accent);
-}
-
-.section-badge-label {
-  color: var(--text-muted);
-}
-
 .founder-intro {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-3);
 }
 
 .founder-photo {
@@ -1357,21 +1282,76 @@ html[data-theme="light"] .halftone {
   color: var(--text-soft);
 }
 
-.founder-bio {
+.hero-name {
+  margin: 0 0 var(--space-2);
+  font-family: "Fraunces", "Space Grotesk", serif;
+  font-weight: 600;
+  font-size: var(--text-hero);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  max-width: none;
+}
+
+.hero-role {
+  margin: 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.hero-divider {
+  width: 1px;
+  height: 2.5rem;
+  margin: var(--space-6) 0;
+  background: var(--border-strong);
+}
+
+.hero-bio {
   max-width: 46ch;
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-6);
   font-size: var(--text-lg);
   color: var(--text);
 }
 
-.hero-support-headline {
-  max-width: 34ch;
-  margin: 0 0 var(--space-2);
-  font-family: "Space Grotesk", sans-serif;
-  font-size: var(--text-xl);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text-soft);
+.hero-contact-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.hero-status-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--positive);
+}
+
+.hero-contact-sep {
+  color: var(--border-strong);
+}
+
+.hero-contact-link {
+  color: var(--accent);
+  transition: color 160ms ease;
+}
+
+.hero-contact-link:hover {
+  color: var(--accent-strong);
 }
 
 h1,
@@ -1508,10 +1488,11 @@ h3 {
   font-size: var(--text-xs);
 }
 
-.hero-visual {
-  position: relative;
+.proof-strip-grid {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-4);
+  margin-top: var(--space-8);
 }
 
 .terminal-card,
@@ -1648,8 +1629,7 @@ h3 {
   white-space: pre-wrap;
 }
 
-.hero-stats {
-  grid-column: 1 / -1;
+.stat-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-4);
@@ -2020,6 +2000,19 @@ html[data-theme="light"] .service-icon {
   font-size: var(--text-sm);
 }
 
+.ascii-strip {
+  margin-top: var(--space-8);
+  height: 3.2rem;
+  overflow: hidden;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  word-break: break-all;
+  color: var(--border-strong);
+  opacity: 0.6;
+}
+
 [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
@@ -2055,7 +2048,6 @@ html[data-theme="light"] .service-icon {
 }
 
 @media (max-width: 980px) {
-  .hero,
   .detail-hero,
   .footer-grid,
   .detail-proof-grid,
@@ -2063,12 +2055,9 @@ html[data-theme="light"] .service-icon {
   .service-grid,
   .process-grid,
   .project-grid,
-  .project-grid-wide {
+  .project-grid-wide,
+  .proof-strip-grid {
     grid-template-columns: 1fr;
-  }
-
-  .hero-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .lane-heading,
@@ -2175,7 +2164,7 @@ if (themeToggle) {
     const nextTheme = root.getAttribute("data-theme") === "light" ? "dark" : "light";
     applyTheme(nextTheme);
   });
-  applyTheme(root.getAttribute("data-theme") || "dark");
+  applyTheme(root.getAttribute("data-theme") || "light");
 }
 
 const header = document.querySelector(".site-header");
@@ -2186,6 +2175,16 @@ if (header && toggle) {
     const next = header.getAttribute("data-open") === "true" ? "false" : "true";
     header.setAttribute("data-open", next);
   });
+}
+
+const clockEl = document.querySelector("[data-clock]");
+
+if (clockEl) {
+  const updateClock = () => {
+    clockEl.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+  updateClock();
+  setInterval(updateClock, 15000);
 }
 
 const revealItems = document.querySelectorAll("[data-reveal]");
