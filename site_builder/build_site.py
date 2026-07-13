@@ -153,6 +153,7 @@ def header_markup(language: str, route: str) -> str:
         home = "/"
     nav_items = [
         (f"{home}#services", t(language, "Services", "Servicos")),
+        (f"{home}#projects", t(language, "Projects", "Projetos")),
         (f"{home}#contact", t(language, "Contact", "Contato")),
     ]
     nav = "".join(
