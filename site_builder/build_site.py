@@ -134,7 +134,7 @@ def head_markup(language: str, route: str, title: str | None = None, description
   {theme_bootstrap_script()}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/styles.css">
   <script defer src="/assets/app.js"></script>
 </head>"""
@@ -709,20 +709,20 @@ def project_detail_markup(language: str, project: dict) -> str:
   <section class="section detail-content">
     <div class="detail-grid detail-grid-rich">
       <article class="detail-card" data-reveal>
-        <h2>{html.escape(t(language, 'What ships in this repository', 'O que entra neste repositorio'))}</h2>
+        <h3>{html.escape(t(language, 'What ships in this repository', 'O que entra neste repositorio'))}</h3>
         <ul class="detail-list">{deliverables}</ul>
       </article>
       <article class="detail-card" data-reveal>
-        <h2>{html.escape(t(language, 'Stack and operating model', 'Stack e modelo operacional'))}</h2>
+        <h3>{html.escape(t(language, 'Stack and operating model', 'Stack e modelo operacional'))}</h3>
         <ul class="stack-list">{stack_items}</ul>
         <p>{html.escape(t(language, project['summary_en'], project['summary_pt']))}</p>
       </article>
       <article class="detail-card detail-card-emphasis" data-reveal>
-        <h2>{html.escape(t(language, 'Why buyers pick this type of build', 'Por que esse tipo de entrega vende'))}</h2>
+        <h3>{html.escape(t(language, 'Why buyers pick this type of build', 'Por que esse tipo de entrega vende'))}</h3>
         <ul class="detail-list">{buyer_points}</ul>
       </article>
       <article class="detail-card" data-reveal>
-        <h2>{html.escape(t(language, 'How delivery stays reliable', 'Como a entrega fica confiavel'))}</h2>
+        <h3>{html.escape(t(language, 'How delivery stays reliable', 'Como a entrega fica confiavel'))}</h3>
         <ul class="detail-list">{control_points}</ul>
       </article>
     </div>
@@ -838,6 +838,7 @@ def site_css() -> str:
   /* spacing scale */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
   --space-5: 1.25rem;
@@ -1032,12 +1033,12 @@ main,
 .header-start {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: var(--space-2-5);
   justify-self: start;
 }
 
 .header-cta {
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .header-cta-dot {
@@ -1051,7 +1052,7 @@ main,
 .header-socials {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: var(--space-2);
 }
 
 .header-social-icon {
@@ -1090,7 +1091,7 @@ main,
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: var(--space-3);
   border-radius: var(--radius-full);
 }
 
@@ -1104,8 +1105,8 @@ main,
   align-items: center;
   gap: 0.15rem;
   min-width: 9rem;
-  margin-top: 0.6rem;
-  padding: 0.6rem;
+  margin-top: var(--space-2-5);
+  padding: var(--space-2-5);
   background: var(--header-surface);
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -1117,7 +1118,7 @@ main,
 }
 
 .brand-dropdown .nav-link {
-  padding: 0.4rem 0.6rem;
+  padding: var(--space-2) var(--space-2-5);
 }
 
 .brand-menu:hover .brand-dropdown,
@@ -1188,9 +1189,9 @@ main,
 
 .lang-switch {
   display: inline-flex;
-  gap: 0.4rem;
+  gap: var(--space-2);
   align-items: center;
-  padding: 0.5rem 0.75rem;
+  padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
   transition: border-color 160ms ease, color 160ms ease;
@@ -1204,7 +1205,7 @@ main,
   font-family: "IBM Plex Mono", monospace;
   font-size: var(--text-xs);
   color: var(--text-muted);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.1em;
 }
 
 .theme-switch {
@@ -1308,7 +1309,7 @@ html[data-theme="light"] .theme-option-light {
 }
 
 .hero-centered {
-  padding: var(--space-24) 0 var(--space-16);
+  padding: clamp(var(--space-16), 10vw, var(--space-24)) 0 clamp(var(--space-10), 6vw, var(--space-16));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1358,14 +1359,14 @@ html[data-theme="light"] .halftone {
   font-family: "IBM Plex Mono", monospace;
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   color: var(--accent);
 }
 
 .founder-intro {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: var(--space-2-5);
   margin: 0 0 var(--space-3);
 }
 
@@ -1380,7 +1381,7 @@ html[data-theme="light"] .halftone {
 .founder-pill {
   display: inline-flex;
   align-items: center;
-  padding: 0.4rem 0.85rem;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-full);
   border: 1px solid var(--border);
   background: var(--card);
@@ -1450,18 +1451,18 @@ html[data-theme="light"] .halftone {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: var(--space-2-5);
   font-family: "IBM Plex Mono", monospace;
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--text-muted);
 }
 
 .hero-status {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: var(--space-2);
 }
 
 .hero-status-dot {
@@ -1496,7 +1497,9 @@ h3 {
   margin: 0 0 var(--space-4);
   font-family: "Space Grotesk", sans-serif;
   letter-spacing: -0.02em;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: var(--text-lg);
+  line-height: 1.2;
 }
 
 h1 {
@@ -1508,11 +1511,6 @@ h1 {
 h2 {
   font-size: var(--text-4xl);
   line-height: 1.05;
-}
-
-h3 {
-  font-size: var(--text-lg);
-  font-weight: 600;
 }
 
 .hero-text,
@@ -1611,7 +1609,7 @@ h3 {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: var(--space-2-5);
 }
 
 .proof-ribbon li,
@@ -1620,7 +1618,7 @@ h3 {
 .project-category {
   display: inline-flex;
   align-items: center;
-  padding: 0.4rem 0.75rem;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-full);
   border: 1px solid var(--border);
   background: var(--card);
@@ -1683,7 +1681,7 @@ h3 {
 .status-card-head {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: var(--space-2-5);
   margin-bottom: var(--space-4);
   font-size: var(--text-sm);
   color: var(--text-soft);
@@ -1737,7 +1735,7 @@ h3 {
 
 .terminal-head {
   display: flex;
-  gap: 0.45rem;
+  gap: var(--space-2);
   margin-bottom: var(--space-4);
 }
 
@@ -1762,7 +1760,7 @@ h3 {
 
 .terminal-card code {
   display: grid;
-  gap: 0.55rem;
+  gap: var(--space-2-5);
   font-family: "IBM Plex Mono", monospace;
   font-size: var(--text-sm);
   color: var(--terminal-code);
@@ -1791,7 +1789,7 @@ h3 {
 .stat strong {
   display: block;
   font-family: "Space Grotesk", sans-serif;
-  font-size: var(--text-2xl);
+  font-size: var(--text-3xl);
   margin-bottom: 0.35rem;
 }
 
@@ -1801,7 +1799,8 @@ h3 {
 }
 
 .section {
-  padding: var(--space-24) 0 0;
+  padding: clamp(var(--space-16), 10vw, var(--space-24)) 0;
+  scroll-margin-top: var(--space-16);
 }
 
 .section-heading,
@@ -1916,7 +1915,7 @@ html[data-theme="light"] .service-icon {
   font-size: var(--text-xs);
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
 }
 
 .project-grid,
@@ -1936,7 +1935,7 @@ html[data-theme="light"] .service-icon {
 }
 
 .project-card-compact .project-card-top {
-  margin-bottom: 0.7rem;
+  margin-bottom: var(--space-3);
 }
 
 .project-card-compact .project-summary {
@@ -1969,7 +1968,7 @@ html[data-theme="light"] .service-icon {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: var(--space-2-5);
 }
 
 .detail-list {
@@ -2040,11 +2039,11 @@ html[data-theme="light"] .service-icon {
   margin: var(--space-5) 0 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: var(--space-2-5);
 }
 
 .detail-stack-preview li {
-  padding: 0.45rem 0.75rem;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-full);
   border: 1px solid var(--border);
   background: var(--card);
@@ -2086,7 +2085,7 @@ html[data-theme="light"] .service-icon {
   font-family: "Space Grotesk", sans-serif;
   font-size: var(--text-lg);
   line-height: 1.2;
-  margin-bottom: 0.45rem;
+  margin-bottom: var(--space-2);
 }
 
 .detail-proof-card span {
@@ -2104,19 +2103,13 @@ html[data-theme="light"] .service-icon {
   align-items: stretch;
 }
 
-.detail-card h2 {
-  margin-bottom: var(--space-4);
-  font-size: var(--text-xl);
-}
-
 .detail-card-emphasis {
   background: var(--accent-soft);
   border-color: var(--accent-border);
 }
 
 .site-footer {
-  margin-top: var(--space-24);
-  padding: var(--space-8) 0 var(--space-12);
+  padding: clamp(var(--space-16), 10vw, var(--space-24)) 0 var(--space-12);
 }
 
 .footer-grid {
@@ -2147,7 +2140,7 @@ html[data-theme="light"] .service-icon {
   font-family: "IBM Plex Mono", monospace;
   font-size: var(--text-xs);
   line-height: 1.3;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   word-break: break-all;
   color: var(--border-strong);
   opacity: 0.6;
@@ -2241,7 +2234,7 @@ html[data-theme="light"] .service-icon {
     width: 100%;
     flex-direction: column;
     align-items: flex-start;
-    padding-top: 0.5rem;
+    padding-top: var(--space-2);
   }
 
   .theme-switch {
@@ -2264,6 +2257,10 @@ html[data-theme="light"] .service-icon {
 
   h1 {
     font-size: clamp(2.1rem, 10vw, 3.1rem);
+  }
+
+  h2 {
+    font-size: clamp(1.9rem, 8vw, 2.6rem);
   }
 
   .brand-text span {
