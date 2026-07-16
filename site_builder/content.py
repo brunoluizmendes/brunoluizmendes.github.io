@@ -11,17 +11,19 @@ SITE = {
     "headline_en": "Data and automation that don't call you at 3am.",
     "headline_pt": "Dados e automacao que nao te ligam de madrugada.",
     "subheadline_en": (
-        "Pipelines, integrations, and AI agents in production, with logs, retries, and monitoring "
-        "from day one, so you find out something broke before your customer does."
+        "Pipelines, integrations, and AI agents running in production, with logs, retries, and "
+        "monitoring wired in from day one. You find out something broke before your customer does "
+        "— I've picked up enough 3am pages myself to build it any other way now."
     ),
     "subheadline_pt": (
-        "Pipelines, integracoes e agentes de AI em producao, com logs, retries e monitoramento desde "
-        "o primeiro deploy, para voce descobrir que algo quebrou antes do seu cliente."
+        "Pipelines, integracoes e agentes de AI rodando em producao, com logs, retries e monitoramento "
+        "configurados desde o primeiro deploy. Voce descobre que algo quebrou antes do seu cliente "
+        "— eu ja apaguei incendio de madrugada o bastante pra fazer diferente agora."
     ),
     "role_en": "Data Engineering + AI Systems",
     "role_pt": "Data Engineering + Sistemas de AI",
-    "location_en": "Built for finance, ops, marketing, and growth teams.",
-    "location_pt": "Feito para times de financas, operacoes, marketing e growth.",
+    "location_en": "The teams I build this for: finance, ops, marketing, growth.",
+    "location_pt": "Os times pra quem eu construo isso: financas, operacoes, marketing e growth.",
     "github_url": "https://github.com/brunoluizmendes",
     "linkedin_url": "https://www.linkedin.com/in/brunoluizmendes/",
     "upwork_url": "https://www.upwork.com/freelancers/~015610c5abb8e28a49?mp_source=share",
@@ -89,8 +91,8 @@ SITE = {
             "icon": "bot",
             "title_en": "AI workflows and signal pipelines",
             "title_pt": "Fluxos de AI e pipelines de sinais",
-            "body_en": "An AI agent you can actually audit when something goes wrong, not a black box nobody wants to debug.",
-            "body_pt": "Agente de AI que voce consegue auditar quando algo da errado, nao uma caixa preta que ninguem quer debugar.",
+            "body_en": "An AI agent that logs every decision it makes, so debugging it takes minutes, not days.",
+            "body_pt": "Agente de AI que registra cada decisao que toma, para debugar levar minutos, nao dias.",
         },
     ],
     "process": [
@@ -99,24 +101,24 @@ SITE = {
             "step": "01",
             "title_en": "Scope",
             "title_pt": "Escopo",
-            "body_en": "A short discovery pass finds the few decisions that actually drive cost and architecture, not a 40-slide deck.",
-            "body_pt": "Uma etapa curta de discovery acha as poucas decisoes que realmente definem custo e arquitetura, nao uma apresentacao de 40 slides.",
+            "body_en": "A short discovery pass, usually one or two calls, surfaces the handful of decisions that actually drive cost and architecture.",
+            "body_pt": "Um discovery curto, geralmente uma ou duas calls, identifica as poucas decisoes que realmente definem custo e arquitetura.",
         },
         {
             "icon": "terminal",
             "step": "02",
             "title_en": "Build",
             "title_pt": "Construcao",
-            "body_en": "You see the pipeline running against real data in the first weeks, not just moving on a sprint board.",
-            "body_pt": "Voce ve o pipeline rodando com dado real nas primeiras semanas, nao so andando num board de sprint.",
+            "body_en": "The pipeline is running against real data within the first couple of weeks, and you can click into it and check for yourself.",
+            "body_pt": "O pipeline ja roda com dado real nas primeiras semanas, e voce pode entrar e checar por conta propria.",
         },
         {
             "icon": "shield-check",
             "step": "03",
             "title_en": "Operate",
             "title_pt": "Operacao",
-            "body_en": "Every pipeline ships with monitoring and safe retry paths, not bolted on after an incident.",
-            "body_pt": "Todo pipeline sai com monitoramento e retries seguros, sem depender de correcao pos-incidente.",
+            "body_en": "Every pipeline ships with monitoring and safe retry paths built in from day one. I've cleaned up too many systems where that got added after the first outage.",
+            "body_pt": "Todo pipeline sai com monitoramento e retries seguros desde o primeiro dia. Ja consertei sistema demais onde isso so foi adicionado depois do primeiro apagao.",
         },
         {
             "icon": "package-check",
@@ -210,8 +212,8 @@ PROJECTS = [
         "category_pt": "Automacao financeira",
         "tagline_en": "Stop copying invoices and statements by hand from portals that don't have an API.",
         "tagline_pt": "Pare de copiar nota e extrato na mao de portal que nao tem API.",
-        "summary_en": "A Python scraping flow that logs in, reconciles what it finds, and hands finance clean, BigQuery-ready records instead of a spreadsheet full of manual entries.",
-        "summary_pt": "Um fluxo em Python que faz login, concilia o que encontra e entrega pro financeiro registros limpos, prontos para BigQuery, em vez de uma planilha cheia de lancamento manual.",
+        "summary_en": "A Python scraping flow that logs in, reconciles what it finds, and turns finance's manual copy-paste routine into clean, BigQuery-ready records.",
+        "summary_pt": "Um fluxo em Python que faz login, concilia o que encontra e transforma a rotina de copiar e colar do financeiro em registros limpos, prontos para BigQuery.",
         "problem_en": "Finance teams still copy invoices, statements, payment status, and tax records from browser-only portals.",
         "problem_pt": "Times financeiros ainda copiam notas, extratos, status de pagamento e impostos de portais web.",
         "solution_en": "Automated logins handle the scraping, while reconciliation checks, fallback logic, and retries catch what a script alone would miss.",
@@ -520,8 +522,8 @@ PROJECTS = [
         "category_pt": "Operacoes com AI",
         "tagline_en": "An AI automation that survives contact with routing, retries, and someone asking why it did that.",
         "tagline_pt": "Uma automacao com AI que sobrevive a roteamento, retries e alguem perguntando por que ela fez isso.",
-        "summary_en": "Inbox ingestion, CRM task logic, and agent action records give every automated decision a paper trail someone can actually audit, instead of a fragile prompt chain.",
-        "summary_pt": "Ingestao de inbox, logica de tarefas em CRM e registros de acao do agente dao a cada decisao automatizada um rastro auditavel, em vez de uma cadeia fragil de prompts.",
+        "summary_en": "Inbox ingestion, CRM task logic, and agent action records turn every automated decision into something with a paper trail, so you can pull up exactly why the agent did what it did.",
+        "summary_pt": "Ingestao de inbox, logica de tarefas em CRM e registros de acao do agente transformam cada decisao automatizada em algo com rastro auditavel, para voce puxar exatamente por que o agente fez o que fez.",
         "problem_en": "Many AI automations look impressive in demos but fail once routing, retries, and business accountability matter.",
         "problem_pt": "Muitas automacoes com AI impressionam em demo, mas falham quando roteamento, retries e accountability importam.",
         "solution_en": "Inbox ingestion, CRM task logic, and agent action records give every automated decision a paper trail someone can actually audit.",

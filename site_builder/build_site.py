@@ -219,8 +219,8 @@ def footer_markup(language: str) -> str:
     secondary_label = t(language, "Connect on LinkedIn", "Conectar no LinkedIn")
     closing_en = "Have a system in mind?"
     closing_pt = "Tem um sistema em mente?"
-    next_step_en = "Book a 20-minute call to walk through the problem — no deck, no obligation."
-    next_step_pt = "Agende uma call de 20 minutos para conversar sobre o problema — sem apresentacao, sem compromisso."
+    next_step_en = "Book a 20-minute call. I'll ask about the problem, tell you honestly if it's a fit, and we go from there."
+    next_step_pt = "Agende uma call de 20 minutos. Eu pergunto sobre o problema, digo com sinceridade se faz sentido, e seguimos dali."
     return f"""<footer class="site-footer" id="contact">
   {svg_blob(BLOB_FOOTER_PATH, "blobFooter", "footer-blob")}
   <div class="footer-halftone halftone" aria-hidden="true"></div>
@@ -390,8 +390,8 @@ def project_card(
 def status_panel_markup(language: str) -> str:
     guarantees = [
         t(language, "No silent pipeline breaks", "Sem quebra silenciosa de pipeline"),
-        t(language, "No rework from duplicate data", "Sem retrabalho por dado duplicado"),
-        t(language, "Alerts before the incident, not after", "Alerta antes do incidente, nao depois"),
+        t(language, "Every duplicate gets caught before it becomes rework", "Toda duplicidade e pega antes de virar retrabalho"),
+        t(language, "You get alerted while there's still time to fix it", "Voce recebe o alerta enquanto ainda da tempo de resolver"),
         t(language, "Handoff without an emergency call", "Handoff sem call de emergencia"),
     ]
     rows = "".join(
@@ -509,7 +509,7 @@ def services_markup(language: str) -> str:
     return f"""<section class="section section-services" id="services">
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'Areas of work', 'Frentes de atuacao'))}</p>
-    <h2>{html.escape(t(language, 'Four problems, one engineer', 'Quatro frentes, um engenheiro'))}</h2>
+    <h2>{html.escape(t(language, "The four things clients hire me for", "As quatro coisas que os clientes me contratam pra fazer"))}</h2>
   </div>
   <div class="service-grid">{cards}</div>
 </section>"""
@@ -520,7 +520,7 @@ def project_sections_markup(language: str) -> str:
     proof = "".join(f"<li>{html.escape(item)}</li>" for item in SITE["proof_ribbon"])
     return f"""<section class="section section-projects" id="projects">
   <div class="section-heading">
-    <p class="eyebrow">{html.escape(t(language, 'Proof, not claims', 'Prova, nao promessa'))}</p>
+    <p class="eyebrow">{html.escape(t(language, "What I've actually built", 'O que eu realmente construi'))}</p>
     <h2>{html.escape(t(language, 'Selected projects', 'Projetos selecionados'))}</h2>
     <p>{html.escape(t(language, 'Clean schemas, replay-safe pipelines, a handoff another engineer can pick up.', 'Schemas limpos, pipelines seguros para replay, um handoff que outro engenheiro consegue assumir.'))}</p>
   </div>
