@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import json
 import shutil
 from pathlib import Path
 try:
@@ -326,7 +327,14 @@ def svg_blob(path: str, gradient_id: str, css_class: str) -> str:
 </svg>"""
 
 
-def project_card(language: str, project: dict, detailed: bool = False, compact: bool = False) -> str:
+def project_card(
+    language: str,
+    project: dict,
+    detailed: bool = False,
+    compact: bool = False,
+    with_thumb: bool = False,
+    featured: bool = False,
+) -> str:
     detail_href = f"{route_prefix(language)}/projects/{project['slug']}/"
     repo_href = repo_url(project["repo"])
     title = html.escape(project["title"])
@@ -337,16 +345,41 @@ def project_card(language: str, project: dict, detailed: bool = False, compact: 
     class_name = "project-card project-card-detailed" if detailed else "project-card"
     if compact:
         class_name += " project-card-compact"
+    if with_thumb:
+        class_name += " project-card-thumbed"
+    if featured:
+        class_name += " project-card-featured"
     tagline_markup = "" if compact else f'<p class="project-tagline">{tagline}</p>'
     stack_markup = "" if compact else f'<ul class="stack-list">{stack}</ul>'
+    thumb_markup = ""
+    category_markup = f'<p class="project-category">{category}</p>'
+    meta_markup = ""
+    if with_thumb:
+        lane_info = project_lane(project)
+        lane_title = html.escape(t(language, lane_info["title_en"], lane_info["title_pt"]))
+        primary_stack = html.escape(project["stack"][0]) if project["stack"] else ""
+        featured_tag_markup = (
+            f'<span class="project-thumb-tag project-thumb-tag-featured">{html.escape(t(language, "Featured case", "Case em destaque"))}</span>'
+            if featured
+            else ""
+        )
+        thumb_markup = f"""<div class="project-thumb" data-lane="{html.escape(project['lane'])}" aria-hidden="true">
+  <span class="project-thumb-tag">{category}</span>
+  {featured_tag_markup}
+</div>"""
+        category_markup = ""
+        meta_text = f"{lane_title} &middot; {primary_stack}" if primary_stack else lane_title
+        meta_markup = f'<p class="project-meta">{meta_text}</p>'
     return f"""<article class="{class_name}" data-reveal>
+  {thumb_markup}
   <div class="project-card-top">
-    <p class="project-category">{category}</p>
+    {category_markup}
     <h3>{title}</h3>
     {tagline_markup}
   </div>
   <p class="project-summary">{summary}</p>
   {stack_markup}
+  {meta_markup}
   <div class="project-links">
     <a href="{detail_href}" class="inline-link">{html.escape(t(language, 'View case', 'Ver case'))}{icon('arrow-right', 'icon icon-inline')}</a>
     <a href="{repo_href}" class="inline-link" target="_blank" rel="noreferrer">GitHub{icon('external', 'icon icon-inline')}</a>
@@ -374,6 +407,36 @@ def status_panel_markup(language: str) -> str:
     <span>{html.escape(t(language, 'What this avoids', 'O que isso evita'))}</span>
   </div>
   <ul class="status-list">{rows}</ul>
+</div>"""
+
+
+def live_panel_markup(language: str) -> str:
+    panel = SITE["live_panel"]
+    rows = "".join(
+        f"""<li data-live-row data-values="{html.escape(json.dumps(row[f'values_{language}']))}">
+  <span class="live-panel-label">{html.escape(row[f'label_{language}'])}</span>
+  <span class="live-panel-value">{html.escape(row[f'values_{language}'][0])}</span>
+</li>"""
+        for row in panel["rows"]
+    )
+    progress_values = panel["progress_values"]
+    return f"""<div class="live-panel" data-reveal data-live-panel data-progress="{html.escape(json.dumps(progress_values))}" data-metric-base="{panel['metric_base']}" data-metric-swing="{panel['metric_swing']}">
+  <div class="live-panel-head">
+    <span class="live-panel-dot" aria-hidden="true"></span>
+    <span>{html.escape(t(language, 'Live monitoring', 'Monitoramento ao vivo'))}</span>
+  </div>
+  <ul class="live-panel-list">{rows}</ul>
+  <div class="live-panel-progress">
+    <div class="live-panel-progress-head">
+      <span>{html.escape(t(language, panel['progress_label_en'], panel['progress_label_pt']))}</span>
+      <span data-live-progress-label>{progress_values[0]}%</span>
+    </div>
+    <div class="live-panel-bar"><span data-live-bar style="width: {progress_values[0]}%"></span></div>
+  </div>
+  <div class="live-panel-metric">
+    <strong data-live-metric>{panel['metric_base']}</strong>
+    <span>{html.escape(t(language, panel['metric_label_en'], panel['metric_label_pt']))}</span>
+  </div>
 </div>"""
 
 
@@ -419,25 +482,6 @@ def proof_strip_markup(language: str) -> str:
 </div>"""
         for item in SITE["stats"]
     )
-    terminal_lines = (
-        (
-            "$ problem",
-            "pipeline breaks silently at 3am",
-            "$ what we fix",
-            "logs -- retries -- alerts before it's a fire",
-            "$ how",
-            "python -- dbt -- warehouses -- automation",
-        )
-        if language == "en"
-        else (
-            "$ problema",
-            "pipeline quebra silencioso as 3h",
-            "$ o que a gente resolve",
-            "logs -- retries -- alerta antes do incendio",
-            "$ como",
-            "python -- dbt -- warehouses -- automacao",
-        )
-    )
     return f"""<section class="section section-proof-strip" id="proof">
   <div class="section-heading">
     <p class="eyebrow">{html.escape(t(language, 'What actually ships', 'O que realmente sai do forno'))}</p>
@@ -447,19 +491,7 @@ def proof_strip_markup(language: str) -> str:
   </div>
   <div class="proof-strip-grid">
     {status_panel_markup(language)}
-    <div class="terminal-card" data-reveal>
-      <div class="terminal-head">
-        <span></span><span></span><span></span>
-      </div>
-      <code>
-        <span>{html.escape(terminal_lines[0])}</span>
-        <span>{html.escape(terminal_lines[1])}</span>
-        <span>{html.escape(terminal_lines[2])}</span>
-        <span>{html.escape(terminal_lines[3])}</span>
-        <span>{html.escape(terminal_lines[4])}</span>
-        <span>{html.escape(terminal_lines[5])}</span>
-      </code>
-    </div>
+    {live_panel_markup(language)}
   </div>
   <div class="stat-grid">{stats}</div>
 </section>"""
@@ -738,7 +770,18 @@ def project_detail_markup(language: str, project: dict) -> str:
 
 
 def projects_index_markup(language: str) -> str:
-    cards = "".join(project_card(language, project, detailed=True) for project in PROJECTS)
+    featured_slug = FEATURED_PROJECT_SLUGS[0]
+    ordered = sorted(PROJECTS, key=lambda item: item["slug"] != featured_slug)
+    cards = "".join(
+        project_card(
+            language,
+            project,
+            detailed=True,
+            with_thumb=True,
+            featured=project["slug"] == featured_slug,
+        )
+        for project in ordered
+    )
     return f"""<main class="projects-index">
   <section class="section-heading section-heading-page" data-reveal>
     <p class="eyebrow">{html.escape(t(language, 'Project archive', 'Arquivo de projetos'))}</p>
@@ -867,7 +910,7 @@ def site_css() -> str:
   --theme-color: #0a0a10;
   --header-surface: rgba(10, 10, 16, 0.78);
   --grid-line: rgba(255, 255, 255, 0.035);
-  --terminal-code: #b9c3ff;
+  --panel-value: #b9c3ff;
   --focus-ring: rgba(79, 98, 227, 0.55);
   --button-secondary-bg: rgba(255, 255, 255, 0.07);
   --button-ghost-color: rgba(243, 243, 246, 0.78);
@@ -897,7 +940,7 @@ html[data-theme="light"] {
   --theme-color: #ffffff;
   --header-surface: rgba(255, 255, 255, 0.86);
   --grid-line: rgba(15, 15, 20, 0.045);
-  --terminal-code: #2c3aa0;
+  --panel-value: #2c3aa0;
   --focus-ring: rgba(53, 72, 201, 0.45);
   --button-secondary-bg: rgba(15, 15, 20, 0.04);
   --button-ghost-color: #3548c9;
@@ -1633,7 +1676,7 @@ h2 {
   margin-top: var(--space-8);
 }
 
-.terminal-card,
+.live-panel,
 .status-card,
 .detail-panel,
 .service-card,
@@ -1729,42 +1772,115 @@ h2 {
   color: var(--positive);
 }
 
-.terminal-card {
+.live-panel {
   padding: var(--space-5) var(--space-6);
-}
-
-.terminal-head {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-.terminal-head span {
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.terminal-head span:first-child {
-  background: #ff4c96;
-}
-
-.terminal-head span:nth-child(2) {
-  background: #ffd166;
-}
-
-.terminal-head span:last-child {
-  background: #73f3a1;
-}
-
-.terminal-card code {
   display: grid;
+  gap: var(--space-5);
+}
+
+.live-panel-head {
+  display: flex;
+  align-items: center;
   gap: var(--space-2-5);
-  font-family: "IBM Plex Mono", monospace;
   font-size: var(--text-sm);
-  color: var(--terminal-code);
-  white-space: pre-wrap;
+  color: var(--text-soft);
+}
+
+.live-panel-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--positive);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--positive) 18%, transparent);
+}
+
+.live-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.live-panel-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+}
+
+.live-panel-list li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.live-panel-label {
+  color: var(--text-soft);
+}
+
+.live-panel-value {
+  color: var(--panel-value);
+  transition: opacity 200ms ease;
+}
+
+.live-panel-value.is-updating {
+  opacity: 0;
+}
+
+.live-panel-progress {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.live-panel-progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: var(--text-xs);
+  color: var(--text-soft);
+}
+
+.live-panel-bar {
+  height: 0.4rem;
+  border-radius: var(--radius-full);
+  background: var(--card-strong);
+  overflow: hidden;
+}
+
+.live-panel-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  transition: width 600ms ease;
+}
+
+.live-panel-metric {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.live-panel-metric strong {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--text-3xl);
+  transition: opacity 200ms ease;
+}
+
+.live-panel-metric strong.is-updating {
+  opacity: 0.4;
+}
+
+.live-panel-metric span {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
 }
 
 .stat-grid {
@@ -2014,6 +2130,72 @@ html[data-theme="light"] .service-icon {
   transform: translate(2px, -2px);
 }
 
+.project-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-5);
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+}
+
+.project-thumb[data-lane="finance"] {
+  filter: hue-rotate(50deg);
+}
+
+.project-thumb[data-lane="marketing"] {
+  filter: hue-rotate(149deg);
+}
+
+.project-thumb[data-lane="automation"] {
+  filter: hue-rotate(280deg);
+}
+
+.project-thumb-tag {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  background: rgba(10, 10, 16, 0.45);
+  color: #ffffff;
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.project-thumb-tag-featured {
+  left: auto;
+  right: var(--space-3);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.project-meta {
+  margin: var(--space-4) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.project-card-featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.project-card-featured .project-thumb {
+  grid-row: 1 / -1;
+  height: 100%;
+  margin-bottom: 0;
+}
+
+.project-card-featured .project-card-top h3 {
+  font-size: var(--text-2xl);
+}
+
 .detail-page,
 .projects-index {
   padding-top: var(--space-10);
@@ -2199,8 +2381,16 @@ html[data-theme="light"] .service-icon {
   .process-grid,
   .project-grid,
   .project-grid-wide,
-  .proof-strip-grid {
+  .proof-strip-grid,
+  .project-card-featured {
     grid-template-columns: 1fr;
+  }
+
+  .project-card-featured .project-thumb {
+    grid-row: auto;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--space-5);
   }
 
   .lane-heading,
@@ -2357,6 +2547,47 @@ if (clockEl) {
   };
   updateClock();
   setInterval(updateClock, 15000);
+}
+
+const livePanel = document.querySelector("[data-live-panel]");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (livePanel && !reduceMotion) {
+  const rows = Array.from(livePanel.querySelectorAll("[data-live-row]")).map((row) => ({
+    valueEl: row.querySelector(".live-panel-value"),
+    values: JSON.parse(row.getAttribute("data-values")),
+    index: 0,
+  }));
+  const progressValues = JSON.parse(livePanel.getAttribute("data-progress"));
+  const progressBar = livePanel.querySelector("[data-live-bar]");
+  const progressLabel = livePanel.querySelector("[data-live-progress-label]");
+  const metricEl = livePanel.querySelector("[data-live-metric]");
+  const metricBase = Number(livePanel.getAttribute("data-metric-base"));
+  const metricSwing = Number(livePanel.getAttribute("data-metric-swing"));
+  let progressIndex = 0;
+
+  const swapText = (el, text) => {
+    el.classList.add("is-updating");
+    window.setTimeout(() => {
+      el.textContent = text;
+      el.classList.remove("is-updating");
+    }, 150);
+  };
+
+  setInterval(() => {
+    rows.forEach((row) => {
+      row.index = (row.index + 1) % row.values.length;
+      swapText(row.valueEl, row.values[row.index]);
+    });
+
+    progressIndex = (progressIndex + 1) % progressValues.length;
+    const nextProgress = progressValues[progressIndex];
+    progressBar.style.width = `${nextProgress}%`;
+    progressLabel.textContent = `${nextProgress}%`;
+
+    const swing = Math.round((Math.random() - 0.5) * 2 * metricSwing);
+    swapText(metricEl, String(metricBase + swing));
+  }, 4200);
 }
 
 const revealItems = document.querySelectorAll("[data-reveal]");

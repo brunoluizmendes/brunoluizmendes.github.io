@@ -127,6 +127,35 @@ SITE = {
             "body_pt": "Runbooks e um repositorio organizados para outro engenheiro evoluir sem precisar de uma call explicando tudo.",
         },
     ],
+    "live_panel": {
+        "rows": [
+            {
+                "label_en": "Integration",
+                "label_pt": "Integracao",
+                "values_en": ["Synced", "Syncing", "Synced"],
+                "values_pt": ["Sincronizado", "Sincronizando", "Sincronizado"],
+            },
+            {
+                "label_en": "Next cycle",
+                "label_pt": "Proximo ciclo",
+                "values_en": ["in 1h", "in 40min", "in 15min"],
+                "values_pt": ["em 1h", "em 40min", "em 15min"],
+            },
+            {
+                "label_en": "Monitoring",
+                "label_pt": "Monitoramento",
+                "values_en": ["No issues detected", "All checks passing", "No issues detected"],
+                "values_pt": ["Nenhum problema detectado", "Todos os checks ok", "Nenhum problema detectado"],
+            },
+        ],
+        "progress_label_en": "Daily pipeline",
+        "progress_label_pt": "Pipeline diario",
+        "progress_values": [84, 91, 76, 100],
+        "metric_base": 128,
+        "metric_swing": 6,
+        "metric_label_en": "runs / min",
+        "metric_label_pt": "execucoes / min",
+    },
     "about_en": (
         "Senior-only engineering delivery, direct communication, and systems built to outlast the first six months."
     ),
